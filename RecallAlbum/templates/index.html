@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meri Zindagi Hain Tu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* --- Basic Reset & Global Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Soft Purple Gradient */
+            background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #444;
+        }
+
+        /* --- Floating Hearts Background --- */
+        .bg-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            top: -10%;
+            color: rgba(192, 119, 255, 0.4);
+            animation: fall linear infinite;
+            font-size: 20px;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- Password Section --- */
+        #password-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lock-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(142, 68, 173, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: #8e44ad;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #7f8c8d;
+        }
+
+        input[type="password"] {
+            padding: 14px 24px;
+            border: 2px solid #d1c4e9;
+            border-radius: 30px;
+            outline: none;
+            width: 260px;
+            text-align: center;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin-top: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="password"]:focus {
+            border-color: #8e44ad;
+            width: 280px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 14px 35px;
+            background: linear-gradient(45deg, #a855f7, #6366f1);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            width: 260px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+            /* --- মোবাইলে পারফেক্ট সেন্টার করার ম্যাজিক কোড --- */
+    @media (max-width: 800px) {
+        /* লগইন পেজের জন্য */
+        #password-section {
+            width: 800px; 
+            margin-left: calc(50% - 400px); /* ম্যাজিক সেন্টারিং */
+            transform: scale(0.47); 
+            transform-origin: top center;
+            overflow: hidden;
+        }
+        
+        /* গ্যালারি পেজের জন্য */
+        #gallery-section {
+            width: 800px; 
+            margin-left: calc(50% - 400px); /* ম্যাজিক সেন্টারিং */
+            transform: scale(0.47); 
+            transform-origin: top center;
+            margin-bottom: -400px; 
+            overflow: hidden;
+        }
+    }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Hearts Animation -->
+    <div class="bg-hearts" id="hearts-container"></div>
+
+    <!-- Password Screen -->
+    <section id="password-section">
+        <div class="lock-card">
+            <h1>For My Zindagi</h1>
+            <p>Enter the secret key that I gave you Sweetheart</p>
+            
+            <!-- পাইথনের জন্য ফর্ম ট্যাগ যোগ করা হয়েছে -->
+            <form method="POST" action="/">
+                <input type="password" name="password" placeholder="Enter Password..." required autocomplete="off">
+                <br>
+                <button type="submit">Open My Heart</button>
+            </form>
+
+            <!-- পাইথন থেকে এরর মেসেজ আসবে এখানে -->
+            {% if error %}
+                <p class="error-msg">{{ error }}</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <script>
+        // --- Background Hearts Generator ---
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 4 + 3 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+    </script>
+</body>
+</html>
