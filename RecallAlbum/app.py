@@ -8,6 +8,9 @@ app.secret_key = "super_secret_key_change_this"
 DATA_FILE = 'data.json'
 SETTINGS_FILE = 'settings.json'
 
+VIEWER_PASSWORD = os.environ.get('VIEWER_PASSWORD')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+
 # --- HELPER FUNCTIONS TO READ/WRITE FILES ---
 def get_data():
     if not os.path.exists(DATA_FILE):
@@ -16,12 +19,24 @@ def get_data():
 
 def get_settings():
     if not os.path.exists(SETTINGS_FILE):
-        default = {"viewer_password": "ilu", "admin_password": "admin123", "heading": "Our Memories"}
-        with open(SETTINGS_FILE, 'w') as f: json.dump(default, f, indent=4)
-    with open(SETTINGS_FILE, 'r') as f: return json.load(f)
+        default = {"heading": "Our Memories"}
+        with open(SETTINGS_FILE, 'w') as f:
+            json.dump(default, f, indent=4)
+
+    with open(SETTINGS_FILE, 'r') as f:
+        settings = json.load(f)
+
+    settings['viewer_password'] = VIEWER_PASSWORD
+    settings['admin_password'] = ADMIN_PASSWORD
+
+    return settings
 
 def save_settings(data):
-    with open(SETTINGS_FILE, 'w') as f: json.dump(data, f, indent=4)
+    data.pop('viewer_password', None)
+    data.pop('admin_password', None)
+
+    with open(SETTINGS_FILE, 'w') as f:
+        json.dump(data, f, indent=4)
 
 def save_data(data):
     with open(DATA_FILE, 'w') as f: json.dump(data, f, indent=4)
