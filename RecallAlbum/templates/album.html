@@ -219,8 +219,8 @@
         
         <div class="gallery-container" id="gallery-grid">
             {% for photo in photos %}
-            <div class="photo-card" data-img="{{ url_for('static', filename=photo.url) }}">
-                <img src="{{ url_for('static', filename=photo.url) }}" alt="Memory">
+        <div class="photo-card" data-img="{{ url_for('private_image', filename=photo.url) }}">
+            <img src="{{ url_for('private_image', filename=photo.url) }}">
                 <div class="photo-caption">{{ photo.caption }}</div>
             </div>
             {% endfor %}
