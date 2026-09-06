@@ -67,6 +67,14 @@ def gallery():
     settings = get_settings()
     return render_template('album.html', photos=photos, heading=settings['heading'])
 
+@app.route('/private_image/<filename>')
+def private_image(filename):
+    if 'role' not in session:
+        return redirect(url_for('login'))
+
+    from flask import send_from_directory
+    return send_from_directory('static/images', filename)
+
 @app.route('/dashboard')
 def dashboard():
     if 'role' not in session or session['role'] != 'admin': return redirect(url_for('login'))
