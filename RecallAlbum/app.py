@@ -2,7 +2,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+import io
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key_change_this"
@@ -19,12 +20,18 @@ def init_db():
     cur = conn.cursor()
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS photos (
-            id SERIAL PRIMARY KEY,
-            url TEXT NOT NULL,
-            caption TEXT NOT NULL
-        )
-    """)
+    CREATE TABLE IF NOT EXISTS photos (
+        id SERIAL PRIMARY KEY,
+        url TEXT NOT NULL,
+        caption TEXT NOT NULL,
+        image BYTEA
+    )
+""")
+
+cur.execute("""
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS image BYTEA
+""")
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS settings (
@@ -155,13 +162,27 @@ def gallery():
     settings = get_settings()
     return render_template('album.html', photos=photos, heading=settings['heading'])
 
-@app.route('/private_image/<filename>')
-def private_image(filename):
+@app.route('/private_image/<int:photo_id>')
+def private_image(photo_id):
     if 'role' not in session:
         return redirect(url_for('login'))
 
-    from flask import send_from_directory
-    return send_from_directory('static/images', filename)
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT image FROM photos WHERE id = %s", (photo_id,))
+    photo = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not photo or not photo['image']:
+        return "Image not found", 404
+
+    return send_file(
+        io.BytesIO(bytes(photo['image'])),
+        mimetype='image/jpeg'
+    )
 
 @app.route('/dashboard')
 def dashboard():
