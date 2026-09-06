@@ -40,15 +40,15 @@
         <!-- Add New Photo -->
         <div class="box">
             <h3>Add New Photo</h3>
-            <form action="/add_photo" method="POST">
-                <label>Exact Filename (e.g., 9th.jpg):</label>
-                <input type="text" name="url" required placeholder="9th.jpg">
-                
-                <label>Caption:</label>
-                <input type="text" name="caption" required placeholder="Our new memory">
-                
-                <button type="submit">Add Photo</button>
-            </form>
+            <form action="/add_photo" method="POST" enctype="multipart/form-data">
+    <label>Select Photo:</label>
+    <input type="file" name="image" accept="image/*" required>
+
+    <label>Caption:</label>
+    <input type="text" name="caption" required placeholder="Our new memory">
+
+    <button type="submit">Add Photo</button>
+</form>
         </div>
 
         <!-- Manage Existing Photos -->
