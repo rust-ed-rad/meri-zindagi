@@ -1,3 +1,5 @@
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import json
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -7,39 +9,125 @@ app.secret_key = "super_secret_key_change_this"
 
 DATA_FILE = 'data.json'
 SETTINGS_FILE = 'settings.json'
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+def get_db():
+    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+
+def init_db():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS photos (
+            id SERIAL PRIMARY KEY,
+            url TEXT NOT NULL,
+            caption TEXT NOT NULL
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            id INTEGER PRIMARY KEY,
+            heading TEXT NOT NULL,
+            viewer_password TEXT,
+            admin_password TEXT
+        )
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
 
 VIEWER_PASSWORD = os.environ.get('VIEWER_PASSWORD')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
 # --- HELPER FUNCTIONS TO READ/WRITE FILES ---
 def get_data():
-    if not os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'w') as f: json.dump([], f)
-    with open(DATA_FILE, 'r') as f: return json.load(f)
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT id, url, caption FROM photos ORDER BY id")
+    photos = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return photos
+
+
+def save_data(data):
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM photos")
+
+    for photo in data:
+        cur.execute(
+            "INSERT INTO photos (url, caption) VALUES (%s, %s)",
+            (photo["url"], photo["caption"])
+        )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
 
 def get_settings():
-    if not os.path.exists(SETTINGS_FILE):
-        default = {"heading": "Our Memories"}
-        with open(SETTINGS_FILE, 'w') as f:
-            json.dump(default, f, indent=4)
+    conn = get_db()
+    cur = conn.cursor()
 
-    with open(SETTINGS_FILE, 'r') as f:
-        settings = json.load(f)
+    cur.execute("SELECT heading, viewer_password, admin_password FROM settings WHERE id = 1")
+    settings = cur.fetchone()
 
-    settings['viewer_password'] = VIEWER_PASSWORD
-    settings['admin_password'] = ADMIN_PASSWORD
+    if not settings:
+        settings = {
+            "heading": "Our Memories",
+            "viewer_password": VIEWER_PASSWORD,
+            "admin_password": ADMIN_PASSWORD
+        }
+
+        cur.execute(
+            """
+            INSERT INTO settings (id, heading, viewer_password, admin_password)
+            VALUES (1, %s, %s, %s)
+            """,
+            (
+                settings["heading"],
+                settings["viewer_password"],
+                settings["admin_password"]
+            )
+        )
+        conn.commit()
+
+    cur.close()
+    conn.close()
 
     return settings
 
+
 def save_settings(data):
-    data.pop('viewer_password', None)
-    data.pop('admin_password', None)
+    conn = get_db()
+    cur = conn.cursor()
 
-    with open(SETTINGS_FILE, 'w') as f:
-        json.dump(data, f, indent=4)
+    cur.execute(
+        """
+        UPDATE settings
+        SET heading = %s,
+            viewer_password = %s,
+            admin_password = %s
+        WHERE id = 1
+        """,
+        (
+            data["heading"],
+            data["viewer_password"],
+            data["admin_password"]
+        )
+    )
 
-def save_data(data):
-    with open(DATA_FILE, 'w') as f: json.dump(data, f, indent=4)
+    conn.commit()
+    cur.close()
+    conn.close()
 
 # --- ROUTES ---
 
@@ -119,6 +207,8 @@ def update_settings():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+init_db()
 
 if __name__ == '__main__':
     import os
