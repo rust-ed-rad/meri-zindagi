@@ -57,7 +57,7 @@
             {% for photo in photos %}
                 <div class="photo-list-item">
                     <span><strong>{{ photo.url }}</strong> - {{ photo.caption }}</span>
-                    <a href="/delete_photo/{{ loop.index0 }}" class="delete button">Delete</a>
+                    <a href="/delete_photo/{{ photo.id }}" class="delete button">Delete</a>
                 </div>
             {% else %}
                 <p>No photos added yet.</p>
