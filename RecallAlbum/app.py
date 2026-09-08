@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 import io
+import uuid
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_file
 from werkzeug.utils import secure_filename
 
@@ -53,6 +54,23 @@ def init_db():
         )
     """)
 
+    cur.execute("""
+        ALTER TABLE settings
+        ADD COLUMN IF NOT EXISTS session_version INTEGER DEFAULT 1
+    """)
+
+    # Active login sessions
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS active_sessions (
+            id SERIAL PRIMARY KEY,
+            session_id TEXT UNIQUE NOT NULL,
+            role TEXT NOT NULL,
+            user_agent TEXT,
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            last_seen TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     cur.close()
     conn.close()
@@ -89,7 +107,7 @@ def get_settings():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT heading, viewer_password, admin_password
+        SELECT heading, viewer_password, admin_password, session_version
         FROM settings
         WHERE id = 1
     """)
@@ -100,19 +118,21 @@ def get_settings():
         settings = {
             "heading": "Our Memories",
             "viewer_password": VIEWER_PASSWORD,
-            "admin_password": ADMIN_PASSWORD
+            "admin_password": ADMIN_PASSWORD,
+            "session_version": 1
         }
 
         cur.execute(
             """
             INSERT INTO settings
-            (id, heading, viewer_password, admin_password)
-            VALUES (1, %s, %s, %s)
+            (id, heading, viewer_password, admin_password, session_version)
+            VALUES (1, %s, %s, %s, %s)
             """,
             (
                 settings["heading"],
                 settings["viewer_password"],
-                settings["admin_password"]
+                settings["admin_password"],
+                settings["session_version"]
             )
         )
 
@@ -148,13 +168,157 @@ def save_settings(data):
     conn.close()
 
 
+# ---------------- ACTIVE SESSION FUNCTIONS ----------------
+
+def create_session_record(role):
+    session_id = str(uuid.uuid4())
+    user_agent = request.headers.get('User-Agent', 'Unknown Device')
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        INSERT INTO active_sessions
+        (session_id, role, user_agent)
+        VALUES (%s, %s, %s)
+        """,
+        (
+            session_id,
+            role,
+            user_agent
+        )
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    session['session_id'] = session_id
+
+    return session_id
+
+
+def remove_current_session_record():
+    session_id = session.get('session_id')
+
+    if not session_id:
+        return
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        DELETE FROM active_sessions
+        WHERE session_id = %s
+        """,
+        (session_id,)
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def get_active_sessions():
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Sessions with no activity for 30 minutes are considered inactive
+    cur.execute("""
+        DELETE FROM active_sessions
+        WHERE last_seen < CURRENT_TIMESTAMP - INTERVAL '30 minutes'
+    """)
+
+    conn.commit()
+
+    cur.execute("""
+        SELECT
+            id,
+            session_id,
+            role,
+            user_agent,
+            created_at,
+            last_seen
+        FROM active_sessions
+        ORDER BY last_seen DESC
+    """)
+
+    sessions = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return sessions
+
+
+def check_session():
+    if 'role' not in session:
+        return False
+
+    settings = get_settings()
+
+    # Check global session version
+    if session.get('session_version') != settings['session_version']:
+        remove_current_session_record()
+        session.clear()
+        return False
+
+    # Check individual session record
+    session_id = session.get('session_id')
+
+    if not session_id:
+        session.clear()
+        return False
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        SELECT id
+        FROM active_sessions
+        WHERE session_id = %s
+        """,
+        (session_id,)
+    )
+
+    active_session = cur.fetchone()
+
+    if not active_session:
+        cur.close()
+        conn.close()
+        session.clear()
+        return False
+
+    # Update last activity time
+    cur.execute(
+        """
+        UPDATE active_sessions
+        SET last_seen = CURRENT_TIMESTAMP
+        WHERE session_id = %s
+        """,
+        (session_id,)
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return True
+
+
 # ---------------- LOGIN ----------------
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
 
     if 'role' in session:
-        return redirect(url_for('gallery'))
+        if check_session():
+            return redirect(url_for('gallery'))
+
+        session.clear()
 
     settings = get_settings()
     error = None
@@ -164,11 +328,21 @@ def login():
         pwd = request.form.get('password')
 
         if pwd == settings['viewer_password']:
+
             session['role'] = 'viewer'
+            session['session_version'] = settings['session_version']
+
+            create_session_record('viewer')
+
             return redirect(url_for('gallery'))
 
         elif pwd == settings['admin_password']:
+
             session['role'] = 'admin'
+            session['session_version'] = settings['session_version']
+
+            create_session_record('admin')
+
             return redirect(url_for('dashboard'))
 
         else:
@@ -182,7 +356,7 @@ def login():
 @app.route('/gallery')
 def gallery():
 
-    if 'role' not in session:
+    if not check_session():
         return redirect(url_for('login'))
 
     photos = get_data()
@@ -200,7 +374,7 @@ def gallery():
 @app.route('/private_image/<int:photo_id>')
 def private_image(photo_id):
 
-    if 'role' not in session:
+    if not check_session():
         return redirect(url_for('login'))
 
     conn = get_db()
@@ -234,16 +408,20 @@ def private_image(photo_id):
 @app.route('/dashboard')
 def dashboard():
 
-    if 'role' not in session or session['role'] != 'admin':
+    if not check_session() or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     photos = get_data()
     settings = get_settings()
 
+    # Get currently active sessions/devices
+    active_sessions = get_active_sessions()
+
     return render_template(
         'dashboard.html',
         photos=photos,
-        settings=settings
+        settings=settings,
+        active_sessions=active_sessions
     )
 
 
@@ -252,7 +430,7 @@ def dashboard():
 @app.route('/add_photo', methods=['POST'])
 def add_photo():
 
-    if 'role' not in session or session['role'] != 'admin':
+    if not check_session() or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     file = request.files.get('image')
@@ -306,7 +484,7 @@ def add_photo():
 @app.route('/delete_photo/<int:photo_id>')
 def delete_photo(photo_id):
 
-    if 'role' not in session or session['role'] != 'admin':
+    if not check_session() or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     conn = get_db()
@@ -334,7 +512,7 @@ def delete_photo(photo_id):
 @app.route('/update_settings', methods=['POST'])
 def update_settings():
 
-    if 'role' not in session or session['role'] != 'admin':
+    if not check_session() or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     settings = get_settings()
@@ -350,10 +528,45 @@ def update_settings():
     return redirect(url_for('dashboard'))
 
 
+# ---------------- LOGOUT ALL DEVICES ----------------
+
+@app.route('/logout_all', methods=['POST'])
+def logout_all():
+
+    if not check_session() or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Invalidate every existing login session
+    cur.execute("""
+        UPDATE settings
+        SET session_version = session_version + 1
+        WHERE id = 1
+    """)
+
+    # Remove all active session records
+    cur.execute("""
+        DELETE FROM active_sessions
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    session.clear()
+
+    return redirect(url_for('login'))
+
+
 # ---------------- LOGOUT ----------------
 
 @app.route('/logout')
 def logout():
+
+    if 'role' in session:
+        remove_current_session_record()
 
     session.clear()
 
