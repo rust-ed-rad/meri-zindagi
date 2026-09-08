@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,34 @@
         .success { color: green; font-weight: bold; margin-bottom: 15px; }
         .links { margin-top: 20px; }
         .links a { margin-right: 15px; text-decoration: none; color: #8e44ad; font-weight: bold; }
+
+        .device-item {
+            background: white;
+            border: 1px solid #eee;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .device-role {
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 5px;
+        }
+
+        .device-info {
+            font-size: 13px;
+            color: #555;
+            word-break: break-word;
+        }
+
+        .logout-all {
+            background: #e74c3c;
+        }
+
+        .logout-all:hover {
+            background: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -40,48 +69,120 @@
         <!-- Add New Photo -->
         <div class="box">
             <h3>Add New Photo</h3>
+
             <form action="/add_photo" method="POST" enctype="multipart/form-data">
-    <label>Select Photo:</label>
-    <input type="file" name="image" accept="image/*" required>
 
-    <label>Caption:</label>
-    <input type="text" name="caption" required placeholder="Our new memory">
+                <label>Select Photo:</label>
+                <input type="file" name="image" accept="image/*" required>
 
-    <button type="submit">Add Photo</button>
-</form>
+                <label>Caption:</label>
+                <input type="text" name="caption" required placeholder="Our new memory">
+
+                <button type="submit">Add Photo</button>
+
+            </form>
         </div>
 
         <!-- Manage Existing Photos -->
         <div class="box">
             <h3>Existing Photos</h3>
+
             {% for photo in photos %}
+
                 <div class="photo-list-item">
-                    <span><strong>{{ photo.url }}</strong> - {{ photo.caption }}</span>
-                    <a href="/delete_photo/{{ photo.id }}" class="delete button">Delete</a>
+
+                    <span>
+                        <strong>{{ photo.url }}</strong> - {{ photo.caption }}
+                    </span>
+
+                    <a href="/delete_photo/{{ photo.id }}" class="delete button">
+                        Delete
+                    </a>
+
                 </div>
+
             {% else %}
+
                 <p>No photos added yet.</p>
+
             {% endfor %}
+        </div>
+
+        <!-- Active Devices -->
+        <div class="box">
+
+            <h3>Active Devices</h3>
+
+            {% if active_sessions %}
+
+                {% for device in active_sessions %}
+
+                    <div class="device-item">
+
+                        <div class="device-role">
+                            {{ device.role|capitalize }}
+                        </div>
+
+                        <div class="device-info">
+                            <strong>Device:</strong>
+                            {{ device.user_agent }}
+                        </div>
+
+                        <div class="device-info">
+                            <strong>Login:</strong>
+                            {{ device.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
+
+                        <div class="device-info">
+                            <strong>Last Active:</strong>
+                            {{ device.last_seen.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                <form action="/logout_all" method="POST"
+                      onsubmit="return confirm('Logout all devices?');">
+
+                    <button type="submit" class="logout-all">
+                        Logout All Devices
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <p>No active devices.</p>
+
+            {% endif %}
+
         </div>
 
         <!-- Site Settings -->
         <div class="box">
+
             <h3>Site Settings</h3>
+
             <form action="/update_settings" method="POST">
+
                 <label>Gallery Heading:</label>
                 <input type="text" name="heading" value="{{ settings.heading }}">
-                
+
                 <label>Viewer Password:</label>
                 <input type="password" name="viewer_password" value="{{ settings.viewer_password }}">
-                
+
                 <label>Admin Password:</label>
                 <input type="password" name="admin_password" value="{{ settings.admin_password }}">
-                
+
                 <button type="submit">Save Settings</button>
+
             </form>
+
         </div>
 
     </div>
 
 </body>
 </html>
+```
