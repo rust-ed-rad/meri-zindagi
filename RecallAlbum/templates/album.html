@@ -214,6 +214,10 @@
 
     <div class="bg-hearts" id="hearts-container"></div>
 
+    <audio id="background-music" autoplay loop>
+    <source src="{{ url_for('private_audio') }}" type="audio/mpeg">
+</audio>
+
     <section id="gallery-section">
         <h1>{{ heading }}</h1>
         
