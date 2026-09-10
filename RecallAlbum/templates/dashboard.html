@@ -82,6 +82,20 @@
             </form>
         </div>
 
+        <!-- Add Background Audio -->
+        <div class="box">
+            <h3>Background Music</h3>
+        
+            <form action="/add_audio" method="POST" enctype="multipart/form-data">
+        
+                <label>Select Audio:</label>
+                <input type="file" name="audio" accept="audio/*" required>
+        
+                <button type="submit">Add Background Music</button>
+        
+            </form>
+        </div>
+
         <!-- Manage Existing Photos -->
         <div class="box">
             <h3>Existing Photos</h3>
