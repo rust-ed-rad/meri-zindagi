@@ -252,6 +252,13 @@
         }
         createHearts();
 
+        // IMAGE PRELOAD
+        document.querySelectorAll('.photo-card img').forEach(img => {
+            const preload = new Image();
+            preload.src = img.src;
+        });
+
+
         // 2. GALLERY ANIMATION
         const cards = document.querySelectorAll('.photo-card');
         cards.forEach((card, index) => {
@@ -274,7 +281,7 @@
             else { music.play(); document.getElementById('music-btn').innerText = "🔊"; isPlaying = true; }
         }
 
-        // ৫. অটো স্ক্রল (তোমার পছন্দের ফাস্ট রিউইন্ড লজিক)
+        // 5. AUTOSCROLL
         let scrollSpeed = 0.2; let scrollAccumulator = 0; let isRewinding = false; 
         function startAutoScroll() {
             function loop() {
