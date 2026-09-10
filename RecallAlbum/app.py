@@ -96,6 +96,27 @@ VIEWER_PASSWORD = os.environ.get('VIEWER_PASSWORD')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
 
+# ---------------- AUDIO FUNCTIONS ----------------
+
+def get_audio():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, filename, mime_type
+        FROM audio
+        ORDER BY id DESC
+        LIMIT 1
+    """)
+
+    audio = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    return audio
+    
+
 # ---------------- PHOTO FUNCTIONS ----------------
 
 def get_data():
@@ -385,6 +406,38 @@ def gallery():
     )
 
 
+# ---------------- PRIVATE AUDIO ----------------
+
+@app.route('/private_audio')
+def private_audio():
+
+    if not check_session():
+        return redirect(url_for('login'))
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT audio, mime_type
+        FROM audio
+        ORDER BY id DESC
+        LIMIT 1
+    """)
+
+    audio = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not audio or not audio['audio']:
+        return "Audio not found", 404
+
+    return send_file(
+        io.BytesIO(bytes(audio['audio'])),
+        mimetype=audio['mime_type']
+    )
+    
+
 # ---------------- PRIVATE IMAGE ----------------
 
 @app.route('/private_image/<int:photo_id>')
@@ -494,6 +547,57 @@ def add_photo():
 
     return redirect(url_for('dashboard'))
 
+
+# ---------------- ADD AUDIO ----------------
+
+@app.route('/add_audio', methods=['POST'])
+def add_audio():
+
+    if not check_session() or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    file = request.files.get('audio')
+
+    if not file or not file.filename:
+        flash("Please select an audio file.")
+        return redirect(url_for('dashboard'))
+
+    audio_data = file.read()
+
+    if not audio_data:
+        flash("The selected audio file is empty.")
+        return redirect(url_for('dashboard'))
+
+    filename = secure_filename(file.filename)
+    mime_type = file.mimetype or 'audio/mpeg'
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Keep only one background audio
+    cur.execute("DELETE FROM audio")
+
+    cur.execute(
+        """
+        INSERT INTO audio
+        (filename, audio, mime_type)
+        VALUES (%s, %s, %s)
+        """,
+        (
+            filename,
+            psycopg2.Binary(audio_data),
+            mime_type
+        )
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    flash("Background audio added successfully!")
+
+    return redirect(url_for('dashboard'))
+    
 
 # ---------------- DELETE PHOTO ----------------
 
