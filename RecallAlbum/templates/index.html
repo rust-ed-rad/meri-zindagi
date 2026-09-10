@@ -163,14 +163,14 @@
             <h1>For My Zindagi</h1>
             <p>Enter the secret key that I gave you Sweetheart</p>
             
-            <!-- পাইথনের জন্য ফর্ম ট্যাগ যোগ করা হয়েছে -->
+            <!--Added Form Tag For Python-->
             <form method="POST" action="/">
-                <input type="password" name="password" placeholder="Enter Password..." required autocomplete="off">
+                <input type="password" name="password" placeholder="Enter Password..." required autocomplete="new-password">
                 <br>
                 <button type="submit">Open My Heart</button>
             </form>
 
-            <!-- পাইথন থেকে এরর মেসেজ আসবে এখানে -->
+            <!--Error Messege Here From Python-->
             {% if error %}
                 <p class="error-msg">{{ error }}</p>
             {% endif %}
