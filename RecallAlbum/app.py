@@ -48,6 +48,15 @@ def init_db():
     """)
 
     cur.execute("""
+    CREATE TABLE IF NOT EXISTS audio (
+        id SERIAL PRIMARY KEY,
+        filename TEXT NOT NULL,
+        audio BYTEA NOT NULL,
+        mime_type TEXT NOT NULL
+        )
+    """)
+    
+    cur.execute("""
         ALTER TABLE photos
         ADD COLUMN IF NOT EXISTS mime_type TEXT
     """)
