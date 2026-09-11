@@ -205,7 +205,7 @@
     }
 }
 
-/* --- Image Loading Screen --- */
+/* --- Memory Transition Screen --- */
 #image-loading-screen {
     position: fixed;
     inset: 0;
@@ -213,35 +213,37 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     z-index: 9999;
+    opacity: 1;
+    transition: opacity 1.8s ease;
 }
 
-.image-loader-heart {
-    font-size: 55px;
-    animation: heartbeat 1s ease-in-out infinite;
-}
-
-.image-loading-text {
-    margin-top: 20px;
+.memory-message {
     font-family: 'Dancing Script', cursive;
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: #8e44ad;
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.5;
 }
 
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+.memory-message::after {
+    content: "|";
+    animation: blink-cursor 0.8s infinite;
 }
 
+@keyframes blink-cursor {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+        
         
     </style>
 </head>
 <body>
-
+    
     <div id="image-loading-screen">
-        <div class="image-loader-heart">❤️</div>
-        <div class="image-loading-text">Hold A While...</div>
+        <div class="memory-message" id="memory-message"></div>
     </div>
     
     <div class="bg-hearts" id="hearts-container"></div>
@@ -284,20 +286,50 @@
         }
         createHearts();
 
-        // 2. IMAGE PRELOAD + LOADING SCREEN
+       // 2. IMAGE PRELOAD + MEMORY MESSAGE
         const images = document.querySelectorAll('.photo-card img');
         let loadedImages = 0;
+        
+        function startMemoryMessage() {
+            const messageElement = document.getElementById('memory-message');
+        
+            // Temporary message — later Come From Admin Portal
+            const messageText = "You are always SPEACIAL to me❤️";
+        
+            let index = 0;
+            messageElement.textContent = "";
+        
+            function typeMessage() {
+                if (index < messageText.length) {
+                    messageElement.textContent += messageText.charAt(index);
+                    index++;
+                    setTimeout(typeMessage, 70);
+                } else {
+                    // Typing শেষ → 4 seconds wait
+                    setTimeout(() => {
+                        const screen = document.getElementById('image-loading-screen');
+                        screen.style.opacity = "0";
+        
+                        setTimeout(() => {
+                            screen.style.display = "none";
+                        }, 1800);
+                    }, 4000);
+                }
+            }
+        
+            typeMessage();
+        }
         
         function imageLoaded() {
             loadedImages++;
         
             if (loadedImages >= images.length) {
-                document.getElementById('image-loading-screen').style.display = 'none';
+                startMemoryMessage();
             }
         }
         
         if (images.length === 0) {
-            document.getElementById('image-loading-screen').style.display = 'none';
+            startMemoryMessage();
         } else {
             images.forEach(img => {
                 if (img.complete) {
