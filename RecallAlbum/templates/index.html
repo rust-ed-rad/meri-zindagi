@@ -150,6 +150,43 @@
             overflow: hidden;
         }
     }
+
+        /* --- Gallery Loading Screen --- */
+#loading-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.loader-heart {
+    font-size: 55px;
+    animation: heartbeat 1s ease-in-out infinite;
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #8e44ad;
+}
+
+.loading-dots {
+    margin-top: 10px;
+    color: #8e44ad;
+    font-size: 20px;
+    letter-spacing: 5px;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
     </style>
 </head>
 <body>
@@ -160,11 +197,11 @@
     <!-- Password Screen -->
     <section id="password-section">
         <div class="lock-card">
-            <h1>For My Zindagi</h1>
+            <h1>For Meri Zindagi</h1>
             <p>Enter the secret key that I gave you Sweetheart</p>
             
             <!--Added Form Tag For Python-->
-            <form method="POST" action="/">
+            <form method="POST" action="/" onsubmit="showLoading()">
                 <input type="password" name="password" placeholder="Enter Password..." required autocomplete="new-password">
                 <br>
                 <button type="submit">Open My Heart</button>
@@ -176,6 +213,13 @@
             {% endif %}
         </div>
     </section>
+
+    <!-- Gallery Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-heart">❤️</div>
+        <div class="loading-text">Just A Moment...</div>
+        <div class="loading-dots">•••</div>
+    </div>
 
     <script>
         // --- Background Hearts Generator ---
@@ -192,6 +236,11 @@
             }
         }
         createHearts();
+        
+    function showLoading() {
+        document.getElementById('password-section').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'flex';
+    }
     </script>
 </body>
 </html>
