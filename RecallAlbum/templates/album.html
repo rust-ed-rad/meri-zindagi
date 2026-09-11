@@ -205,13 +205,45 @@
     }
 }
 
+/* --- Image Loading Screen --- */
+#image-loading-screen {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
 
+.image-loader-heart {
+    font-size: 55px;
+    animation: heartbeat 1s ease-in-out infinite;
+}
+
+.image-loading-text {
+    margin-top: 20px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #8e44ad;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
 
         
     </style>
 </head>
 <body>
 
+    <div id="image-loading-screen">
+        <div class="image-loader-heart">❤️</div>
+        <div class="image-loading-text">Hold A While...</div>
+    </div>
+    
     <div class="bg-hearts" id="hearts-container"></div>
 
     <section id="gallery-section">
@@ -252,25 +284,47 @@
         }
         createHearts();
 
-        // IMAGE PRELOAD
-        document.querySelectorAll('.photo-card img').forEach(img => {
-            const preload = new Image();
-            preload.src = img.src;
-        });
+        // 2. IMAGE PRELOAD + LOADING SCREEN
+        const images = document.querySelectorAll('.photo-card img');
+        let loadedImages = 0;
+        
+        function imageLoaded() {
+            loadedImages++;
+        
+            if (loadedImages >= images.length) {
+                document.getElementById('image-loading-screen').style.display = 'none';
+            }
+        }
+        
+        if (images.length === 0) {
+            document.getElementById('image-loading-screen').style.display = 'none';
+        } else {
+            images.forEach(img => {
+                if (img.complete) {
+                    imageLoaded();
+                } else {
+                    img.addEventListener('load', imageLoaded, { once: true });
+                    img.addEventListener('error', imageLoaded, { once: true });
+                }
+            });
+        }
 
 
-        // 2. GALLERY ANIMATION
+        // 3. GALLERY ANIMATION
         const cards = document.querySelectorAll('.photo-card');
-        cards.forEach((card, index) => {
-            setTimeout(() => { card.classList.add('visible'); }, 300 * index);
-            card.addEventListener('click', function() { openLightbox(this.getAttribute('data-img')); });
+        cards.forEach(card => {
+            card.classList.add('visible');
+        
+            card.addEventListener('click', function() {
+                openLightbox(this.getAttribute('data-img'));
+            });
         });
 
-        // 3. LIGHTBOX
+        // 4. LIGHTBOX
         function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
         function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
-        // 4. MUSIC
+        // 5. MUSIC
         const music = document.getElementById('bgMusic');
         let isPlaying = false;
         function playMusic() {
@@ -281,7 +335,7 @@
             else { music.play(); document.getElementById('music-btn').innerText = "🔊"; isPlaying = true; }
         }
 
-        // 5. AUTOSCROLL
+        // 6. AUTOSCROLL
         let scrollSpeed = 0.2; let scrollAccumulator = 0; let isRewinding = false; 
         function startAutoScroll() {
             function loop() {
@@ -302,7 +356,7 @@
             gallery.addEventListener('mouseleave', () => { if(!isRewinding) scrollSpeed = 0.5; });
         }
 
-        // 6. execution
+        // 7. execution
         playMusic();
         startAutoScroll();
     </script>
