@@ -231,8 +231,8 @@
         <img src="" id="lightbox-img">
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="{{ url_for('private_audio') }}" type="audio/mpeg">
+    <audio id="bgMusic" autoplay loop>
+        <source src="{{ url_for('static', filename='oursong.mp3') }}" type="audio/mpeg">
     </audio>
     <button id="music-btn" onclick="toggleMusic()">🎵</button>
     <a href="/logout" id="logout-btn">Logout</a>
