@@ -19,9 +19,6 @@
             box-sizing: border-box;
         }
 
-        .album-bangla {
-            font-family: 'Manha Jhankaar', sans-serif;
-        }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -34,6 +31,15 @@
         @font-face {
             font-family: 'Manha Jhankaar';
             src: url('/static/fonts/Manha%20Jhankaar%20Unicode.otf') format('opentype');
+        }
+
+
+        .bangla-text {
+            font-family: 'Manha Jhankaar', sans-serif;
+        }
+        
+        .english-text {
+            font-family: 'Dancing Script', cursive;
         }
 
 
@@ -638,7 +644,13 @@
                     alt="Memory">
 
                 <div class="photo-caption">
-                    {{ photo.caption }}
+                    {% for char in photo.caption %}
+                        {% if '\u0980' <= char <= '\u09FF' %}
+                            <span class="bangla-text">{{ char }}</span>
+                        {% else %}
+                            <span class="english-text">{{ char }}</span>
+                        {% endif %}
+                    {% endfor %}
                 </div>
 
             </div>
