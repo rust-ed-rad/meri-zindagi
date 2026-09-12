@@ -8,7 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- Basic Reset & Global Styles --- */
+
+        /* ============================= */
+        /*       BASIC RESET              */
+        /* ============================= */
+
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +28,10 @@
         }
 
 
-        /* --- Floating Hearts Background --- */
+        /* ============================= */
+        /*       FLOATING HEARTS          */
+        /* ============================= */
+
         .bg-hearts {
             position: fixed;
             top: 0;
@@ -40,11 +47,15 @@
             position: absolute;
             top: -10%;
             color: rgba(192, 119, 255, 0.4);
+
+            /* Continuous falling */
             animation: fall linear infinite;
+
             font-size: 20px;
         }
 
         @keyframes fall {
+
             0% {
                 transform: translateY(0) rotate(0deg);
                 opacity: 1;
@@ -54,10 +65,14 @@
                 transform: translateY(110vh) rotate(360deg);
                 opacity: 0;
             }
+
         }
 
 
-        /* --- Gallery Section --- */
+        /* ============================= */
+        /*       GALLERY SECTION          */
+        /* ============================= */
+
         #gallery-section {
             padding: 80px 20px 150px 20px;
             text-align: center;
@@ -74,7 +89,10 @@
         }
 
 
-        /* --- ZIGZAG LAYOUT CSS --- */
+        /* ============================= */
+        /*       ZIGZAG LAYOUT            */
+        /* ============================= */
+
         .gallery-container {
             width: 800px;
             margin: 0 auto;
@@ -89,29 +107,49 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             width: 280px;
             opacity: 0;
-            transition: transform 0.8s ease, opacity 0.8s ease, box-shadow 0.3s;
+
+            transition:
+                transform 0.8s ease,
+                opacity 0.8s ease,
+                box-shadow 0.3s;
+
             cursor: pointer;
         }
 
-        /* 1st, 3rd, 5th... (Right Side) */
+
+        /* Right side */
         .photo-card:nth-child(odd) {
             align-self: flex-end;
-            transform: translateX(50px) rotate(5deg) translateY(50px);
+            transform:
+                translateX(50px)
+                rotate(5deg)
+                translateY(50px);
+
             margin-bottom: 30px;
         }
 
-        /* 2nd, 4th, 6th... (Left Side, pulled up) */
+
+        /* Left side */
         .photo-card:nth-child(even) {
             align-self: flex-start;
-            transform: translateX(-50px) rotate(-5deg) translateY(50px);
+            transform:
+                translateX(-50px)
+                rotate(-5deg)
+                translateY(50px);
+
             margin-top: -120px;
             margin-bottom: 30px;
         }
 
-        /* Animation State */
+
+        /* Animation state */
+
         .photo-card.visible {
             opacity: 1;
-            transform: translateX(0) rotate(0deg) translateY(0);
+            transform:
+                translateX(0)
+                rotate(0deg)
+                translateY(0);
         }
 
         .photo-card:nth-child(odd).visible {
@@ -122,10 +160,12 @@
             transform: rotate(-4deg);
         }
 
+
         .photo-card:hover {
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             z-index: 10;
         }
+
 
         .photo-card img {
             width: 100%;
@@ -133,6 +173,7 @@
             display: block;
             border-radius: 2px;
         }
+
 
         .photo-caption {
             margin-top: 20px;
@@ -142,65 +183,113 @@
         }
 
 
-        /* --- Lightbox (Modal) --- */
+        /* ============================= */
+        /*          LIGHTBOX              */
+        /* ============================= */
+
         #lightbox {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
+
             background: rgba(0,0,0,0.9);
+
             justify-content: center;
             align-items: center;
+
             z-index: 100;
+
             cursor: pointer;
+
+            padding: 20px;
         }
 
-        #lightbox img {
-            max-width: 90%;
-            max-height: 90%;
+
+        /*
+           IMPORTANT:
+           The original already-loaded image is moved
+           into the lightbox.
+
+           Therefore browser does NOT need to request
+           the image again.
+        */
+
+        #lightbox .lightbox-active-image {
+            width: auto;
+            height: auto;
+
+            max-width: 90vw;
+            max-height: 90vh;
+
+            object-fit: contain;
+
             border: 10px solid white;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+
+            box-shadow:
+                0 0 30px rgba(255,255,255,0.2);
+
+            border-radius: 2px;
         }
 
 
-        /* --- Audio & Logout --- */
+        /* ============================= */
+        /*        AUDIO & LOGOUT          */
+        /* ============================= */
+
         #music-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
+
             width: 50px;
             height: 50px;
+
             border-radius: 50%;
+
             background: #8e44ad;
             color: white;
+
             border: none;
+
             font-size: 20px;
+
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
+            box-shadow:
+                0 5px 15px rgba(0,0,0,0.2);
+
             z-index: 99;
         }
+
 
         #logout-btn {
             position: fixed;
             bottom: 20px;
             left: 20px;
+
             padding: 10px 20px;
+
             border-radius: 20px;
+
             background: #e74c3c;
             color: white;
+
             border: none;
+
             font-size: 14px;
+
             cursor: pointer;
+
             z-index: 99;
+
             text-decoration: none;
+
             font-family: 'Poppins', sans-serif;
         }
 
 
         /* ============================= */
-        /*      PHONE LAYOUT MATCH       */
+        /*          PHONE LAYOUT          */
         /* ============================= */
 
         @media (max-width: 600px) {
@@ -241,9 +330,11 @@
             }
 
 
-            /* 1st, 3rd, 5th = RIGHT SIDE */
+            /* Right */
+
             .photo-card:nth-child(odd) {
                 align-self: flex-end;
+
                 margin-right: 5vw;
                 margin-top: 0;
                 margin-bottom: -45px;
@@ -255,9 +346,11 @@
             }
 
 
-            /* 2nd, 4th, 6th = LEFT SIDE */
+            /* Left */
+
             .photo-card:nth-child(even) {
                 align-self: flex-start;
+
                 margin-left: 5vw;
                 margin-top: 0;
                 margin-bottom: 10px;
@@ -269,7 +362,6 @@
             }
 
 
-            /* Animation */
             .photo-card.visible {
                 opacity: 1;
             }
@@ -284,37 +376,43 @@
 
 
             /* Lightbox */
+
             #lightbox {
                 padding: 10px;
             }
 
-            #lightbox img {
-                max-width: 92%;
-                max-height: 82%;
+            #lightbox .lightbox-active-image {
+                max-width: 92vw;
+                max-height: 82vh;
                 border-width: 6px;
             }
 
 
             /* Buttons */
+
             #music-btn {
                 width: 44px;
                 height: 44px;
+
                 right: 10px;
                 bottom: 10px;
+
                 font-size: 17px;
             }
 
             #logout-btn {
                 left: 10px;
                 bottom: 10px;
+
                 padding: 7px 15px;
+
                 font-size: 11px;
             }
         }
 
 
         /* ============================= */
-        /*       VERY SMALL PHONES       */
+        /*       VERY SMALL PHONES        */
         /* ============================= */
 
         @media (max-width: 380px) {
@@ -342,34 +440,60 @@
         }
 
 
-        /* --- Memory Transition Screen --- */
+        /* ============================= */
+        /*       MEMORY TRANSITION        */
+        /* ============================= */
+
         #image-loading-screen {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e0c3fc 0%,
+                    #d1c4e9 100%
+                );
+
             display: flex;
+
             justify-content: center;
             align-items: center;
+
             z-index: 9999;
+
             opacity: 1;
-            transition: opacity 1.8s ease;
+
+            transition:
+                opacity 1.8s ease;
         }
+
 
         .memory-message {
             font-family: 'Dancing Script', cursive;
+
             font-size: 2.2rem;
+
             color: #8e44ad;
+
             text-align: center;
+
             max-width: 80%;
+
             line-height: 1.5;
         }
 
+
         .memory-message::after {
             content: "|";
-            animation: blink-cursor 0.8s infinite;
+
+            animation:
+                blink-cursor 0.8s infinite;
         }
 
+
         @keyframes blink-cursor {
+
             0%, 50% {
                 opacity: 1;
             }
@@ -377,29 +501,53 @@
             51%, 100% {
                 opacity: 0;
             }
+
         }
 
 
-        /* --- Transition Falling Hearts --- */
+        /* ============================= */
+        /*      TRANSITION HEARTS         */
+        /* ============================= */
+
         .transition-hearts {
             position: absolute;
             inset: 0;
+
             overflow: hidden;
+
             pointer-events: none;
         }
 
+
         .transition-heart {
             position: absolute;
+
             top: -50px;
+
             font-size: 18px;
+
             color: rgba(192, 119, 255, 0.4);
-            animation: fall-heart linear forwards;
+
+            /*
+               IMPORTANT:
+               Infinite means hearts keep falling
+               continuously instead of stopping
+               after one batch.
+            */
+            animation:
+                fall-heart linear infinite;
+
             opacity: 0.8;
         }
 
+
         @keyframes fall-heart {
+
             0% {
-                transform: translateY(-50px) rotate(0deg);
+                transform:
+                    translateY(-50px)
+                    rotate(0deg);
+
                 opacity: 0;
             }
 
@@ -408,41 +556,73 @@
             }
 
             100% {
-                transform: translateY(110vh) rotate(360deg);
+                transform:
+                    translateY(110vh)
+                    rotate(360deg);
+
                 opacity: 0;
             }
+
         }
 
     </style>
 </head>
 
+
 <body>
 
-<script>
-    if (window.performance && window.performance.navigation.type === 1) {
-        window.scrollTo(0, 0);
-    }
-</script>    
+
+    <!-- ============================= -->
+    <!--       TRANSITION SCREEN        -->
+    <!-- ============================= -->
 
     <div id="image-loading-screen">
-        <div class="transition-hearts" id="transition-hearts"></div>
-        <div class="memory-message" id="memory-message"></div>
+
+        <div
+            class="transition-hearts"
+            id="transition-hearts">
+        </div>
+
+        <div
+            class="memory-message"
+            id="memory-message">
+        </div>
+
     </div>
 
-    <div class="bg-hearts" id="hearts-container"></div>
+
+    <!-- ============================= -->
+    <!--       BACKGROUND HEARTS        -->
+    <!-- ============================= -->
+
+    <div
+        class="bg-hearts"
+        id="hearts-container">
+    </div>
+
+
+    <!-- ============================= -->
+    <!--          GALLERY               -->
+    <!-- ============================= -->
 
     <section id="gallery-section">
 
         <h1>{{ heading }}</h1>
 
-        <div class="gallery-container" id="gallery-grid">
+
+        <div
+            class="gallery-container"
+            id="gallery-grid">
 
             {% for photo in photos %}
 
-            <div class="photo-card"
-                 data-img="{{ url_for('private_image', photo_id=photo.id) }}">
+            <div
+                class="photo-card"
+                data-img="{{ url_for('private_image', photo_id=photo.id) }}">
 
-                <img src="{{ url_for('private_image', photo_id=photo.id) }}">
+                <img
+                    src="{{ url_for('private_image', photo_id=photo.id) }}"
+                    alt="Memory">
 
                 <div class="photo-caption">
                     {{ photo.caption }}
@@ -457,102 +637,293 @@
     </section>
 
 
-    <div id="lightbox" onclick="closeLightbox()">
-        <img src="" id="lightbox-img">
+    <!-- ============================= -->
+    <!--          LIGHTBOX              -->
+    <!-- ============================= -->
+
+    <div
+        id="lightbox"
+        onclick="closeLightbox()">
+
+        <div id="lightbox-container"></div>
+
     </div>
 
 
-    <audio id="bgMusic" autoplay loop>
-        <source src="{{ url_for('static', filename='oursong.mp3') }}" type="audio/mpeg">
+    <!-- ============================= -->
+    <!--            AUDIO              -->
+    <!-- ============================= -->
+
+    <audio
+        id="bgMusic"
+        autoplay
+        loop>
+
+        <source
+            src="{{ url_for('static', filename='oursong.mp3') }}"
+            type="audio/mpeg">
+
     </audio>
 
 
-    <button id="music-btn" onclick="toggleMusic()">🎵</button>
+    <!-- ============================= -->
+    <!--           BUTTONS              -->
+    <!-- ============================= -->
 
-    <a href="/logout" id="logout-btn">Logout</a>
+    <button
+        id="music-btn"
+        onclick="toggleMusic()">
+        🎵
+    </button>
 
+
+    <a
+        href="/logout"
+        id="logout-btn">
+        Logout
+    </a>
+
+
+    <!-- ============================= -->
+    <!--          JAVASCRIPT            -->
+    <!-- ============================= -->
 
     <script>
 
-        // Always start from the transition screen
+
+        /* ================================= */
+        /*      ALWAYS START FROM TOP        */
+        /* ================================= */
+
         window.scrollTo(0, 0);
-        
-        const loadingScreen = document.getElementById('image-loading-screen');
+
+
+        const loadingScreen =
+            document.getElementById(
+                'image-loading-screen'
+            );
+
+
         loadingScreen.style.display = 'flex';
         loadingScreen.style.opacity = '1';
 
-        // 1. HEART
+
+        /* ================================= */
+        /*          1. HEARTS                */
+        /* ================================= */
+
         function createHearts() {
 
-            const container = document.getElementById('hearts-container');
+            const container =
+                document.getElementById(
+                    'hearts-container'
+                );
+
 
             for (let i = 0; i < 25; i++) {
 
-                const heart = document.createElement('div');
+                const heart =
+                    document.createElement('div');
+
 
                 heart.innerHTML = '❤';
+
                 heart.className = 'heart';
 
-                heart.style.left = Math.random() * 100 + 'vw';
+
+                heart.style.left =
+                    Math.random() * 100 + 'vw';
+
 
                 heart.style.animationDuration =
                     Math.random() * 4 + 3 + 's';
 
+
+                heart.style.animationDelay =
+                    Math.random() * 4 + 's';
+
+
                 heart.style.fontSize =
                     Math.random() * 20 + 15 + 'px';
 
+
                 container.appendChild(heart);
+
             }
+
         }
+
 
         createHearts();
 
 
-        // 2. TRANSITION FALLING HEARTS
+        /* ================================= */
+        /*       2. TRANSITION HEARTS        */
+        /* ================================= */
+
         const transitionHearts =
-            document.getElementById('transition-hearts');
+            document.getElementById(
+                'transition-hearts'
+            );
+
 
         for (let i = 0; i < 25; i++) {
 
-            const heart = document.createElement('div');
+            const heart =
+                document.createElement('div');
 
-            heart.className = 'transition-heart';
+
+            heart.className =
+                'transition-heart';
+
+
             heart.innerHTML = '❤';
+
 
             heart.style.left =
                 Math.random() * 100 + '%';
 
+
+            /*
+               Infinite animation.
+               Every heart keeps repeating.
+            */
+
             heart.style.animationDuration =
                 (4 + Math.random() * 5) + 's';
 
+
             heart.style.animationDelay =
-                Math.random() * 3 + 's';
+                -(Math.random() * 8) + 's';
+
 
             heart.style.fontSize =
                 (12 + Math.random() * 14) + 'px';
 
+
             transitionHearts.appendChild(heart);
+
         }
 
 
-        // 3. IMAGE PRELOAD + MEMORY MESSAGE
-        const images =
-            document.querySelectorAll('.photo-card img');
+        /* ================================= */
+        /*             3. MUSIC              */
+        /* ================================= */
 
-        let loadedImages = 0;
+        const music =
+            document.getElementById(
+                'bgMusic'
+            );
 
+
+        let isPlaying = false;
+
+
+        function playMusic() {
+
+            if (!music) {
+                return;
+            }
+
+
+            music.play()
+                .then(() => {
+
+                    isPlaying = true;
+
+
+                    document.getElementById(
+                        'music-btn'
+                    ).innerText = "🔊";
+
+                })
+                .catch(() => {
+
+                    /*
+                       Browser autoplay policy may
+                       block autoplay.
+
+                       No error is thrown to the user.
+                    */
+
+                    isPlaying = false;
+
+                });
+
+        }
+
+
+        function toggleMusic() {
+
+            if (!music) {
+                return;
+            }
+
+
+            if (isPlaying) {
+
+                music.pause();
+
+
+                document.getElementById(
+                    'music-btn'
+                ).innerText = "🔇";
+
+
+                isPlaying = false;
+
+            }
+
+            else {
+
+                music.play()
+                    .then(() => {
+
+                        isPlaying = true;
+
+
+                        document.getElementById(
+                            'music-btn'
+                        ).innerText = "🔊";
+
+                    })
+                    .catch(() => {
+
+                        isPlaying = false;
+
+                    });
+
+            }
+
+        }
+
+
+        /* ================================= */
+        /*       4. MEMORY MESSAGE           */
+        /* ================================= */
 
         function startMemoryMessage() {
 
             const messageElement =
-                document.getElementById('memory-message');
-            
+                document.getElementById(
+                    'memory-message'
+                );
+
+
+            /*
+               Start music at the same time
+               as the typing animation.
+            */
+
             playMusic();
 
-            // Temporary message — later Come From Admin Portal
-            const messageText ="You are always SPECIAL to me, You are my LOVE, You are HEART You are my SOUL You are my ZINDAGi 💗Happy Birthday My Zindagi💗";
+
+            const messageText =
+                "You are always SPECIAL to me, You are my LOVE, You are HEART You are my SOUL You are my ZINDAGi 💗Happy Birthday My Zindagi💗";
+
 
             let index = 0;
+
 
             messageElement.textContent = "";
 
@@ -564,223 +935,440 @@
                     messageElement.textContent +=
                         messageText.charAt(index);
 
+
                     index++;
 
-                    setTimeout(typeMessage, 70);
 
-                } else {
+                    setTimeout(
+                        typeMessage,
+                        70
+                    );
 
-                    // Typing end → 4 seconds wait
+                }
+
+                else {
+
+                    /*
+                       Message finished.
+                       Wait 4 seconds.
+                    */
+
                     setTimeout(() => {
 
-                        const screen =
-                            document.getElementById(
-                                'image-loading-screen'
-                            );
+                        /*
+                           VERY IMPORTANT:
+                           Force the document to the exact
+                           top BEFORE hiding the transition.
+                        */
 
-                        screen.style.opacity = "0";
+                        window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: 'auto'
+                        });
 
+
+                        /*
+                           Fade transition screen.
+                        */
+
+                        loadingScreen.style.opacity =
+                            "0";
+
+
+                        /*
+                           Wait until fade is completely
+                           finished.
+                        */
 
                         setTimeout(() => {
 
-                            window.scrollTo(0, 0);
+                            /*
+                               Keep exact top position
+                               immediately before gallery
+                               becomes visible.
+                            */
 
-                            screen.style.display = "none";
+                            window.scrollTo({
+                                top: 0,
+                                left: 0,
+                                behavior: 'auto'
+                            });
+
+
+                            loadingScreen.style.display =
+                                "none";
+
+
+                            /*
+                               Start auto-scroll ONLY AFTER
+                               transition screen disappears.
+
+                               This prevents the gallery from
+                               moving underneath the transition.
+                            */
+
+                            startAutoScroll();
 
                         }, 1800);
 
+
                     }, 4000);
+
                 }
+
             }
 
+
             typeMessage();
+
         }
 
 
-        function imageLoaded() {
-            loadedImages++;
-        }
+        /* ================================= */
+        /*       5. GALLERY ANIMATION        */
+        /* ================================= */
 
-
-        window.addEventListener('load', () => {
-            startMemoryMessage();
-        });
-
-        // 4. GALLERY ANIMATION
         const cards =
-            document.querySelectorAll('.photo-card');
+            document.querySelectorAll(
+                '.photo-card'
+            );
+
 
         cards.forEach(card => {
 
             card.classList.add('visible');
 
-            card.addEventListener('click', function() {
 
-                openLightbox(
-                    this.getAttribute('data-img')
-                );
+            card.addEventListener(
+                'click',
+                function(event) {
 
-            });
+                    /*
+                       Use the EXISTING loaded image
+                       instead of creating another
+                       network request.
+                    */
+
+                    const originalImage =
+                        this.querySelector('img');
+
+
+                    openLightbox(
+                        originalImage
+                    );
+
+                }
+            );
+
         });
 
 
-        // 5. LIGHTBOX
-       function openLightbox(src) {
-        
+        /* ================================= */
+        /*            6. LIGHTBOX            */
+        /* ================================= */
+
+        let activeImage = null;
+
+        let originalParent = null;
+
+        let originalNextSibling = null;
+
+
+        function openLightbox(imageElement) {
+
+            if (!imageElement) {
+                return;
+            }
+
+
             const lightbox =
-                document.getElementById('lightbox');
-        
-            const lightboxImg =
-                document.getElementById('lightbox-img');
-        
-            lightboxImg.src = src;
-            lightbox.style.display = 'flex';
+                document.getElementById(
+                    'lightbox'
+                );
+
+
+            const container =
+                document.getElementById(
+                    'lightbox-container'
+                );
+
+
+            /*
+               Remember where the original image
+               belongs.
+            */
+
+            activeImage = imageElement;
+
+            originalParent =
+                imageElement.parentNode;
+
+            originalNextSibling =
+                imageElement.nextSibling;
+
+
+            /*
+               Remove any previous content.
+            */
+
+            container.innerHTML = "";
+
+
+            /*
+               Add special lightbox class.
+            */
+
+            imageElement.classList.add(
+                'lightbox-active-image'
+            );
+
+
+            /*
+               MOVE the already-loaded image
+               into the lightbox.
+
+               No new image URL is assigned.
+               No second database request.
+               No second private_image request.
+            */
+
+            container.appendChild(
+                imageElement
+            );
+
+
+            lightbox.style.display =
+                'flex';
+
         }
 
 
         function closeLightbox() {
 
-            document.getElementById(
-                'lightbox'
-            ).style.display = 'none';
-        }
-
-
-        // 6. MUSIC
-        const music =
-            document.getElementById('bgMusic');
-
-        let isPlaying = false;
-
-
-        function playMusic() {
-
-            if (music) {
-
-                music.play()
-                    .then(() => {
-
-                        isPlaying = true;
-
-                        document.getElementById(
-                            'music-btn'
-                        ).innerText = "🔊";
-
-                    })
-                    .catch(e => {});
-            }
-        }
-
-
-        function toggleMusic() {
-
-            if (isPlaying) {
-
-                music.pause();
-
+            const lightbox =
                 document.getElementById(
-                    'music-btn'
-                ).innerText = "🔇";
+                    'lightbox'
+                );
 
-                isPlaying = false;
 
-            } else {
+            if (
+                activeImage &&
+                originalParent
+            ) {
 
-                music.play();
+                /*
+                   Restore original image
+                   exactly where it was.
+                */
 
-                document.getElementById(
-                    'music-btn'
-                ).innerText = "🔊";
+                activeImage.classList.remove(
+                    'lightbox-active-image'
+                );
 
-                isPlaying = true;
+
+                if (
+                    originalNextSibling &&
+                    originalNextSibling.parentNode ===
+                    originalParent
+                ) {
+
+                    originalParent.insertBefore(
+                        activeImage,
+                        originalNextSibling
+                    );
+
+                }
+
+                else {
+
+                    originalParent.appendChild(
+                        activeImage
+                    );
+
+                }
+
             }
+
+
+            lightbox.style.display =
+                'none';
+
+
+            activeImage = null;
+
+            originalParent = null;
+
+            originalNextSibling = null;
+
         }
 
 
-        // 7. AUTOSCROLL
-        let scrollSpeed = 0.2;
-        let scrollAccumulator = 0;
+        /* ================================= */
+        /*          7. AUTO SCROLL           */
+        /* ================================= */
+
+        let scrollSpeed = 0.35;
+
         let isRewinding = false;
+
+        let autoScrollStarted = false;
 
 
         function startAutoScroll() {
 
-            function loop() {
+            /*
+               Prevent accidentally starting
+               multiple animation loops.
+            */
 
-                if (!isRewinding) {
-
-                    scrollAccumulator += scrollSpeed;
-
-                    if (scrollAccumulator >= 1) {
-
-                        window.scrollBy(
-                            0,
-                            Math.floor(scrollAccumulator)
-                        );
-
-                        scrollAccumulator = 0;
-                    }
-
-
-                    const atBottom =
-                        (window.innerHeight + window.scrollY) >=
-                        document.documentElement.scrollHeight - 10;
-
-
-                    if (atBottom) {
-                        isRewinding = true;
-                    }
-
-                } else {
-
-                    window.scrollBy(0, -100);
-
-                    if (window.scrollY <= 0) {
-
-                        window.scrollTo(0, 0);
-
-                        isRewinding = false;
-                    }
-                }
-
-                requestAnimationFrame(loop);
+            if (autoScrollStarted) {
+                return;
             }
 
 
-            requestAnimationFrame(loop);
+            autoScrollStarted = true;
 
 
-            const gallery =
-                document.getElementById('gallery-section');
+            let lastTime = null;
 
 
-            gallery.addEventListener(
-                'mouseenter',
-                () => {
+            function loop(timestamp) {
 
-                    if (!isRewinding) {
-                        scrollSpeed = 0;
+                if (lastTime === null) {
+                    lastTime = timestamp;
+                }
+
+
+                /*
+                   Keep movement based on elapsed time.
+
+                   This makes scrolling much more
+                   consistent and smooth.
+                */
+
+                const delta =
+                    Math.min(
+                        timestamp - lastTime,
+                        32
+                    );
+
+
+                lastTime = timestamp;
+
+
+                if (!isRewinding) {
+
+                    /*
+                       Continuous fractional movement.
+                       No integer rounding.
+                    */
+
+                    const movement =
+                        scrollSpeed *
+                        (delta / 16.67);
+
+
+                    window.scrollBy(
+                        0,
+                        movement
+                    );
+
+
+                    const atBottom =
+                        (
+                            window.innerHeight +
+                            window.scrollY
+                        ) >=
+                        (
+                            document.documentElement
+                                .scrollHeight -
+                            10
+                        );
+
+
+                    if (atBottom) {
+
+                        isRewinding = true;
+
                     }
 
                 }
-            );
+
+                else {
+
+                    /*
+                       Smooth rewind to top.
+                    */
+
+                    const distanceToTop =
+                        window.scrollY;
 
 
-            gallery.addEventListener(
-                'mouseleave',
-                () => {
+                    const rewindAmount =
+                        Math.max(
+                            1,
+                            Math.min(
+                                distanceToTop * 0.08,
+                                4
+                            )
+                        );
 
-                    if (!isRewinding) {
-                        scrollSpeed = 0.5;
+
+                    window.scrollBy(
+                        0,
+                        -rewindAmount
+                    );
+
+
+                    if (
+                        window.scrollY <= 1
+                    ) {
+
+                        window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: 'auto'
+                        });
+
+
+                        isRewinding = false;
+
                     }
 
                 }
+
+
+                requestAnimationFrame(
+                    loop
+                );
+
+            }
+
+
+            requestAnimationFrame(
+                loop
             );
+
         }
 
 
-        // 8. EXECUTION
-        startAutoScroll();
+        /* ================================= */
+        /*             8. START              */
+        /* ================================= */
+
+        /*
+           DO NOT wait for window 'load'.
+
+           Images can load in the background while
+           the transition message is typing.
+
+           Function declarations are hoisted,
+           so startMemoryMessage() is safe here.
+        */
+
+        startMemoryMessage();
+
 
     </script>
 
