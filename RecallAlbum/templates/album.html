@@ -4,393 +4,800 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meri Zindagi Hain Tu</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
     <style>
         /* --- Basic Reset & Global Styles --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%); min-height: 100vh; overflow-x: hidden; color: #444; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #444;
+        }
+
 
         /* --- Floating Hearts Background --- */
-        .bg-hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .heart { position: absolute; top: -10%; color: rgba(192, 119, 255, 0.4); animation: fall linear infinite; font-size: 20px; }
-        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+        .bg-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            top: -10%;
+            color: rgba(192, 119, 255, 0.4);
+            animation: fall linear infinite;
+            font-size: 20px;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
 
         /* --- Gallery Section --- */
-        #gallery-section { padding: 80px 20px 150px 20px; text-align: center; position: relative; z-index: 2; }
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin-bottom: 60px; color: #fff; text-shadow: 2px 2px 4px rgba(142, 68, 173, 0.4); }
+        #gallery-section {
+            padding: 80px 20px 150px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
 
-        /* --- NEW: ZIGZAG LAYOUT CSS --- */
-        .gallery-container { width: 800px; margin: 0 auto; display: flex; flex-direction: column; }
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 60px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(142, 68, 173, 0.4);
+        }
+
+
+        /* --- ZIGZAG LAYOUT CSS --- */
+        .gallery-container {
+            width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
 
         .photo-card {
-            background: white; padding: 15px 15px 50px 15px; border-radius: 4px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 280px;
-            opacity: 0; transition: transform 0.8s ease, opacity 0.8s ease, box-shadow 0.3s; cursor: pointer;
+            background: white;
+            padding: 15px 15px 50px 15px;
+            border-radius: 4px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            width: 280px;
+            opacity: 0;
+            transition: transform 0.8s ease, opacity 0.8s ease, box-shadow 0.3s;
+            cursor: pointer;
         }
 
         /* 1st, 3rd, 5th... (Right Side) */
-        .photo-card:nth-child(odd) { align-self: flex-end; transform: translateX(50px) rotate(5deg) translateY(50px); margin-bottom: 30px; }
+        .photo-card:nth-child(odd) {
+            align-self: flex-end;
+            transform: translateX(50px) rotate(5deg) translateY(50px);
+            margin-bottom: 30px;
+        }
 
         /* 2nd, 4th, 6th... (Left Side, pulled up) */
-        .photo-card:nth-child(even) { align-self: flex-start; transform: translateX(-50px) rotate(-5deg) translateY(50px); margin-top: -120px; margin-bottom: 30px; }
+        .photo-card:nth-child(even) {
+            align-self: flex-start;
+            transform: translateX(-50px) rotate(-5deg) translateY(50px);
+            margin-top: -120px;
+            margin-bottom: 30px;
+        }
 
         /* Animation State */
-        .photo-card.visible { opacity: 1; transform: translateX(0) rotate(0deg) translateY(0); }
-        .photo-card:nth-child(odd).visible { transform: rotate(4deg); }
-        .photo-card:nth-child(even).visible { transform: rotate(-4deg); }
+        .photo-card.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(0deg) translateY(0);
+        }
 
-        .photo-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 10; }
-        .photo-card img { width: 100%; height: auto; display: block; border-radius: 2px; }
-        .photo-caption { margin-top: 20px; font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #555; }
+        .photo-card:nth-child(odd).visible {
+            transform: rotate(4deg);
+        }
+
+        .photo-card:nth-child(even).visible {
+            transform: rotate(-4deg);
+        }
+
+        .photo-card:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .photo-caption {
+            margin-top: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: #555;
+        }
+
 
         /* --- Lightbox (Modal) --- */
-        #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 100; cursor: pointer; }
-        #lightbox img { max-width: 90%; max-height: 90%; border: 10px solid white; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border: 10px solid white;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
 
         /* --- Audio & Logout --- */
-        #music-btn { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #8e44ad; color: white; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 99; }
-        #logout-btn { position: fixed; bottom: 20px; left: 20px; padding: 10px 20px; border-radius: 20px; background: #e74c3c; color: white; border: none; font-size: 14px; cursor: pointer; z-index: 99; text-decoration: none; font-family: 'Poppins', sans-serif; }
-    
-        
+        #music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #8e44ad;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 99;
+        }
+
+        #logout-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 99;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+        }
 
 
+        /* ============================= */
+        /*      PHONE LAYOUT MATCH       */
+        /* ============================= */
 
-/* ============================= */
-/*      PHONE LAYOUT MATCH       */
-/* ============================= */
+        @media (max-width: 600px) {
 
-@media (max-width: 600px) {
+            #gallery-section {
+                padding: 45px 8px 120px 8px;
+            }
 
-    #gallery-section {
-        padding: 45px 8px 120px 8px;
-    }
+            h1 {
+                font-size: 2.4rem;
+                margin-bottom: 35px;
+                line-height: 1.2;
+            }
 
-    h1 {
-        font-size: 2.4rem;
-        margin-bottom: 35px;
-        line-height: 1.2;
-    }
+            .gallery-container {
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
 
-    .gallery-container {
-        width: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-        position: relative;
-    }
+            .photo-card {
+                width: clamp(145px, 43vw, 190px);
+                padding: 8px 8px 28px 8px;
+                border-radius: 3px;
+            }
 
-    .photo-card {
-        width: clamp(145px, 43vw, 190px);
-        padding: 8px 8px 28px 8px;
-        border-radius: 3px;
-    }
+            .photo-card img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
 
-    .photo-card img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .photo-caption {
-        margin-top: 12px;
-        font-size: 1.05rem;
-        line-height: 1.2;
-    }
-
-
-    /* ----------------------------- */
-    /*  1st, 3rd, 5th = RIGHT SIDE  */
-    /* ----------------------------- */
-
-    .photo-card:nth-child(odd) {
-        align-self: flex-end;
-
-        margin-right: 5vw;
-        margin-top: 0;
-        margin-bottom: -45px;
-
-        transform:
-            translateX(35px)
-            rotate(4deg)
-            translateY(30px);
-    }
+            .photo-caption {
+                margin-top: 12px;
+                font-size: 1.05rem;
+                line-height: 1.2;
+            }
 
 
-    /* ----------------------------- */
-    /*  2nd, 4th, 6th = LEFT SIDE   */
-    /* ----------------------------- */
+            /* 1st, 3rd, 5th = RIGHT SIDE */
+            .photo-card:nth-child(odd) {
+                align-self: flex-end;
+                margin-right: 5vw;
+                margin-top: 0;
+                margin-bottom: -45px;
 
-    .photo-card:nth-child(even) {
-        align-self: flex-start;
-
-        margin-left: 5vw;
-        margin-top: 0;
-        margin-bottom: 10px;
-
-        transform:
-            translateX(-35px)
-            rotate(-4deg)
-            translateY(30px);
-    }
+                transform:
+                    translateX(35px)
+                    rotate(4deg)
+                    translateY(30px);
+            }
 
 
-    /* Animation */
-    .photo-card.visible {
-        opacity: 1;
-    }
+            /* 2nd, 4th, 6th = LEFT SIDE */
+            .photo-card:nth-child(even) {
+                align-self: flex-start;
+                margin-left: 5vw;
+                margin-top: 0;
+                margin-bottom: 10px;
 
-    .photo-card:nth-child(odd).visible {
-        transform: rotate(4deg);
-    }
-
-    .photo-card:nth-child(even).visible {
-        transform: rotate(-4deg);
-    }
-
-
-    /* Lightbox */
-    #lightbox {
-        padding: 10px;
-    }
-
-    #lightbox img {
-        max-width: 92%;
-        max-height: 82%;
-        border-width: 6px;
-    }
+                transform:
+                    translateX(-35px)
+                    rotate(-4deg)
+                    translateY(30px);
+            }
 
 
-    /* Buttons */
-    #music-btn {
-        width: 44px;
-        height: 44px;
-        right: 10px;
-        bottom: 10px;
-        font-size: 17px;
-    }
+            /* Animation */
+            .photo-card.visible {
+                opacity: 1;
+            }
 
-    #logout-btn {
-        left: 10px;
-        bottom: 10px;
-        padding: 7px 15px;
-        font-size: 11px;
-    }
-}
+            .photo-card:nth-child(odd).visible {
+                transform: rotate(4deg);
+            }
+
+            .photo-card:nth-child(even).visible {
+                transform: rotate(-4deg);
+            }
 
 
-/* ============================= */
-/*       VERY SMALL PHONES       */
-/* ============================= */
+            /* Lightbox */
+            #lightbox {
+                padding: 10px;
+            }
 
-@media (max-width: 380px) {
+            #lightbox img {
+                max-width: 92%;
+                max-height: 82%;
+                border-width: 6px;
+            }
 
-    h1 {
-        font-size: 2.15rem;
-    }
 
-    .photo-card {
-        width: 42vw;
-        max-width: 165px;
-    }
+            /* Buttons */
+            #music-btn {
+                width: 44px;
+                height: 44px;
+                right: 10px;
+                bottom: 10px;
+                font-size: 17px;
+            }
 
-    .photo-caption {
-        font-size: 0.95rem;
-    }
+            #logout-btn {
+                left: 10px;
+                bottom: 10px;
+                padding: 7px 15px;
+                font-size: 11px;
+            }
+        }
 
-    .photo-card:nth-child(odd) {
-        margin-right: 4vw;
-    }
 
-    .photo-card:nth-child(even) {
-        margin-left: 4vw;
-    }
-}
+        /* ============================= */
+        /*       VERY SMALL PHONES       */
+        /* ============================= */
 
-/* --- Memory Transition Screen --- */
-#image-loading-screen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 1.8s ease;
-}
+        @media (max-width: 380px) {
 
-.memory-message {
-    font-family: 'Dancing Script', cursive;
-    font-size: 2.2rem;
-    color: #8e44ad;
-    text-align: center;
-    max-width: 80%;
-    line-height: 1.5;
-}
+            h1 {
+                font-size: 2.15rem;
+            }
 
-.memory-message::after {
-    content: "|";
-    animation: blink-cursor 0.8s infinite;
-}
+            .photo-card {
+                width: 42vw;
+                max-width: 165px;
+            }
 
-@keyframes blink-cursor {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-        
-        
+            .photo-caption {
+                font-size: 0.95rem;
+            }
+
+            .photo-card:nth-child(odd) {
+                margin-right: 4vw;
+            }
+
+            .photo-card:nth-child(even) {
+                margin-left: 4vw;
+            }
+        }
+
+
+        /* --- Memory Transition Screen --- */
+        #image-loading-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 1.8s ease;
+        }
+
+        .memory-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #8e44ad;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .memory-message::after {
+            content: "|";
+            animation: blink-cursor 0.8s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 50% {
+                opacity: 1;
+            }
+
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+
+
+        /* --- Transition Falling Hearts --- */
+        .transition-hearts {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .transition-heart {
+            position: absolute;
+            top: -50px;
+            font-size: 18px;
+            animation: fall-heart linear forwards;
+            opacity: 0.8;
+        }
+
+        @keyframes fall-heart {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
+
 <body>
-    
+
     <div id="image-loading-screen">
+        <div class="transition-hearts" id="transition-hearts"></div>
         <div class="memory-message" id="memory-message"></div>
     </div>
-    
+
     <div class="bg-hearts" id="hearts-container"></div>
 
     <section id="gallery-section">
+
         <h1>{{ heading }}</h1>
-        
+
         <div class="gallery-container" id="gallery-grid">
+
             {% for photo in photos %}
-        <div class="photo-card" data-img="{{ url_for('private_image', photo_id=photo.id) }}">
-    <img src="{{ url_for('private_image', photo_id=photo.id) }}">
-                <div class="photo-caption">{{ photo.caption }}</div>
+
+            <div class="photo-card"
+                 data-img="{{ url_for('private_image', photo_id=photo.id) }}">
+
+                <img src="{{ url_for('private_image', photo_id=photo.id) }}">
+
+                <div class="photo-caption">
+                    {{ photo.caption }}
+                </div>
+
             </div>
+
             {% endfor %}
+
         </div>
+
     </section>
+
 
     <div id="lightbox" onclick="closeLightbox()">
         <img src="" id="lightbox-img">
     </div>
 
+
     <audio id="bgMusic" autoplay loop>
         <source src="{{ url_for('static', filename='oursong.mp3') }}" type="audio/mpeg">
     </audio>
+
+
     <button id="music-btn" onclick="toggleMusic()">🎵</button>
+
     <a href="/logout" id="logout-btn">Logout</a>
 
+
     <script>
+
         // 1. HEART
         function createHearts() {
+
             const container = document.getElementById('hearts-container');
+
             for (let i = 0; i < 25; i++) {
+
                 const heart = document.createElement('div');
-                heart.innerHTML = '❤'; heart.className = 'heart';
+
+                heart.innerHTML = '❤';
+                heart.className = 'heart';
+
                 heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = Math.random() * 4 + 3 + 's';
-                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+
+                heart.style.animationDuration =
+                    Math.random() * 4 + 3 + 's';
+
+                heart.style.fontSize =
+                    Math.random() * 20 + 15 + 'px';
+
                 container.appendChild(heart);
             }
         }
+
         createHearts();
 
-       // 2. IMAGE PRELOAD + MEMORY MESSAGE
-        const images = document.querySelectorAll('.photo-card img');
+
+        // 2. TRANSITION FALLING HEARTS
+        const transitionHearts =
+            document.getElementById('transition-hearts');
+
+        for (let i = 0; i < 25; i++) {
+
+            const heart = document.createElement('div');
+
+            heart.className = 'transition-heart';
+            heart.innerText = '❤️';
+
+            heart.style.left =
+                Math.random() * 100 + '%';
+
+            heart.style.animationDuration =
+                (4 + Math.random() * 5) + 's';
+
+            heart.style.animationDelay =
+                Math.random() * 3 + 's';
+
+            heart.style.fontSize =
+                (12 + Math.random() * 14) + 'px';
+
+            transitionHearts.appendChild(heart);
+        }
+
+
+        // 3. IMAGE PRELOAD + MEMORY MESSAGE
+        const images =
+            document.querySelectorAll('.photo-card img');
+
         let loadedImages = 0;
-        
+
+
         function startMemoryMessage() {
-            const messageElement = document.getElementById('memory-message');
-        
+
+            const messageElement =
+                document.getElementById('memory-message');
+
             // Temporary message — later Come From Admin Portal
-            const messageText = "You are always SPEACIAL to me Happy Birthday My Zindagi💗";
-        
+            const messageText =
+                "You are always SPEACIAL to me Happy Birthday My Zindagi💗";
+
             let index = 0;
+
             messageElement.textContent = "";
-        
+
+
             function typeMessage() {
+
                 if (index < messageText.length) {
-                    messageElement.textContent += messageText.charAt(index);
+
+                    messageElement.textContent +=
+                        messageText.charAt(index);
+
                     index++;
+
                     setTimeout(typeMessage, 70);
+
                 } else {
+
                     // Typing শেষ → 4 seconds wait
                     setTimeout(() => {
-                        const screen = document.getElementById('image-loading-screen');
+
+                        const screen =
+                            document.getElementById(
+                                'image-loading-screen'
+                            );
+
                         screen.style.opacity = "0";
-        
+
+
                         setTimeout(() => {
+
                             screen.style.display = "none";
+
                         }, 1800);
+
                     }, 4000);
                 }
             }
-        
+
             typeMessage();
         }
-        
+
+
         function imageLoaded() {
+
             loadedImages++;
-        
+
             if (loadedImages >= images.length) {
                 startMemoryMessage();
             }
         }
-        
+
+
         if (images.length === 0) {
+
             startMemoryMessage();
+
         } else {
+
             images.forEach(img => {
+
                 if (img.complete) {
+
                     imageLoaded();
+
                 } else {
-                    img.addEventListener('load', imageLoaded, { once: true });
-                    img.addEventListener('error', imageLoaded, { once: true });
+
+                    img.addEventListener(
+                        'load',
+                        imageLoaded,
+                        { once: true }
+                    );
+
+                    img.addEventListener(
+                        'error',
+                        imageLoaded,
+                        { once: true }
+                    );
                 }
+
             });
         }
 
 
-        // 3. GALLERY ANIMATION
-        const cards = document.querySelectorAll('.photo-card');
+        // 4. GALLERY ANIMATION
+        const cards =
+            document.querySelectorAll('.photo-card');
+
         cards.forEach(card => {
+
             card.classList.add('visible');
-        
+
             card.addEventListener('click', function() {
-                openLightbox(this.getAttribute('data-img'));
+
+                openLightbox(
+                    this.getAttribute('data-img')
+                );
+
             });
         });
 
-        // 4. LIGHTBOX
-        function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
-        function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
 
-        // 5. MUSIC
-        const music = document.getElementById('bgMusic');
+        // 5. LIGHTBOX
+        function openLightbox(src) {
+
+            document.getElementById(
+                'lightbox-img'
+            ).src = src;
+
+            document.getElementById(
+                'lightbox'
+            ).style.display = 'flex';
+        }
+
+
+        function closeLightbox() {
+
+            document.getElementById(
+                'lightbox'
+            ).style.display = 'none';
+        }
+
+
+        // 6. MUSIC
+        const music =
+            document.getElementById('bgMusic');
+
         let isPlaying = false;
+
+
         function playMusic() {
-            if(music) { music.play().then(() => { isPlaying = true; document.getElementById('music-btn').innerText = "🔊"; }).catch(e => {}); }
-        }
-        function toggleMusic() {
-            if (isPlaying) { music.pause(); document.getElementById('music-btn').innerText = "🔇"; isPlaying = false; }
-            else { music.play(); document.getElementById('music-btn').innerText = "🔊"; isPlaying = true; }
+
+            if (music) {
+
+                music.play()
+                    .then(() => {
+
+                        isPlaying = true;
+
+                        document.getElementById(
+                            'music-btn'
+                        ).innerText = "🔊";
+
+                    })
+                    .catch(e => {});
+            }
         }
 
-        // 6. AUTOSCROLL
-        let scrollSpeed = 0.2; let scrollAccumulator = 0; let isRewinding = false; 
+
+        function toggleMusic() {
+
+            if (isPlaying) {
+
+                music.pause();
+
+                document.getElementById(
+                    'music-btn'
+                ).innerText = "🔇";
+
+                isPlaying = false;
+
+            } else {
+
+                music.play();
+
+                document.getElementById(
+                    'music-btn'
+                ).innerText = "🔊";
+
+                isPlaying = true;
+            }
+        }
+
+
+        // 7. AUTOSCROLL
+        let scrollSpeed = 0.2;
+        let scrollAccumulator = 0;
+        let isRewinding = false;
+
+
         function startAutoScroll() {
+
             function loop() {
+
                 if (!isRewinding) {
+
                     scrollAccumulator += scrollSpeed;
-                    if (scrollAccumulator >= 1) { window.scrollBy(0, Math.floor(scrollAccumulator)); scrollAccumulator = 0; }
-                    const atBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 10;
-                    if (atBottom) { isRewinding = true; setTimeout(() => { isRewinding = true; }, 1000); }
+
+                    if (scrollAccumulator >= 1) {
+
+                        window.scrollBy(
+                            0,
+                            Math.floor(scrollAccumulator)
+                        );
+
+                        scrollAccumulator = 0;
+                    }
+
+
+                    const atBottom =
+                        (window.innerHeight + window.scrollY) >=
+                        document.documentElement.scrollHeight - 10;
+
+
+                    if (atBottom) {
+                        isRewinding = true;
+                    }
+
                 } else {
+
                     window.scrollBy(0, -100);
-                    if (window.scrollY <= 0) { window.scrollTo(0, 0); isRewinding = false; }
+
+                    if (window.scrollY <= 0) {
+
+                        window.scrollTo(0, 0);
+
+                        isRewinding = false;
+                    }
                 }
+
                 requestAnimationFrame(loop);
             }
+
+
             requestAnimationFrame(loop);
-            const gallery = document.getElementById('gallery-section');
-            gallery.addEventListener('mouseenter', () => { if(!isRewinding) scrollSpeed = 0; });
-            gallery.addEventListener('mouseleave', () => { if(!isRewinding) scrollSpeed = 0.5; });
+
+
+            const gallery =
+                document.getElementById('gallery-section');
+
+
+            gallery.addEventListener(
+                'mouseenter',
+                () => {
+
+                    if (!isRewinding) {
+                        scrollSpeed = 0;
+                    }
+
+                }
+            );
+
+
+            gallery.addEventListener(
+                'mouseleave',
+                () => {
+
+                    if (!isRewinding) {
+                        scrollSpeed = 0.5;
+                    }
+
+                }
+            );
         }
 
-        // 7. execution
+
+        // 8. EXECUTION
         playMusic();
         startAutoScroll();
+
     </script>
+
 </body>
 </html>
