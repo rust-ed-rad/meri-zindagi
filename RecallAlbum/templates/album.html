@@ -19,7 +19,6 @@
             box-sizing: border-box;
         }
 
-
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
@@ -27,19 +26,10 @@
             overflow-x: hidden;
             color: #444;
         }
-        /**********************************************************************************************************/
-     /*  @font-face {
+
+        @font-face {
             font-family: 'Manha Jhankaar';
             src: url('/static/fonts/Manha%20Jhankaar%20Unicode.otf') format('opentype');
-        }
-
-
-        .bangla-text {
-            font-family: 'Manha Jhankaar', sans-serif;
-        } *******************************************************************************************************/
-        
-        .english-text {
-            font-family: 'Dancing Script', cursive;
         }
 
 
@@ -97,7 +87,7 @@
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 60px;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(142, 68, 173, 0.4);
@@ -644,7 +634,9 @@
                     alt="Memory">
 
                 <div class="photo-caption">
-                    
+                    {{ photo.caption }}
+                </div>
+
             </div>
 
             {% endfor %}
@@ -1262,8 +1254,8 @@
         
         
         /*
-           Phone touch scroll manually detect
-           If touch Auto-scroll won't stop permanently.
+           Phone-এর touch scroll manually detect করা হবে।
+           Auto-scroll touch করার কারণে বন্ধ হবে না permanently.
         */
         
         if (isPhone) {
@@ -1370,10 +1362,10 @@
         
                     /*
                        PC:
-                       Pointer on page pause.
+                       Pointer page-এর উপর থাকলে pause.
         
                        Phone:
-                       NO Pointer condition.
+                       Pointer condition নেই.
                     */
         
                     const shouldPause =
