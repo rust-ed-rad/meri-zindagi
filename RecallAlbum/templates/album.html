@@ -393,7 +393,7 @@
             top: -50px;
             font-size: 18px;
             color: rgba(192, 119, 255, 0.4);
-            animation: fall-heart linear infinite;
+            animation: fall-heart linear forwards;
             opacity: 0.8;
         }
 
@@ -417,6 +417,12 @@
 </head>
 
 <body>
+
+<script>
+    if (window.performance && window.performance.navigation.type === 1) {
+        window.scrollTo(0, 0);
+    }
+</script>    
 
     <div id="image-loading-screen">
         <div class="transition-hearts" id="transition-hearts"></div>
@@ -533,10 +539,11 @@
 
             const messageElement =
                 document.getElementById('memory-message');
+            
+            playMusic();
 
             // Temporary message — later Come From Admin Portal
-            const messageText =
-                <p1>"You are always SPECIAL to me"</p1> <p1>"You are my LOVE, You are HEART"</p1> <p1> "You are my SOUL"</p1> <p1>"You are my ZINDAGi"</p1> <p1>"💗Happy Birthday My Zindagi💗"</p1>;
+            const messageText ="You are always SPECIAL to me, You are my LOVE, You are HEART You are my SOUL You are my ZINDAGi 💗Happy Birthday My Zindagi💗";
 
             let index = 0;
 
@@ -556,7 +563,7 @@
 
                 } else {
 
-                    // Typing শেষ → 4 seconds wait
+                    // Typing end → 4 seconds wait
                     setTimeout(() => {
 
                         const screen =
@@ -568,6 +575,8 @@
 
 
                         setTimeout(() => {
+
+                            window.scrollTo(0, 0);
 
                             screen.style.display = "none";
 
@@ -582,45 +591,11 @@
 
 
         function imageLoaded() {
-
             loadedImages++;
-
-            if (loadedImages >= images.length) {
-                startMemoryMessage();
-            }
         }
 
 
-        if (images.length === 0) {
-
-            startMemoryMessage();
-
-        } else {
-
-            images.forEach(img => {
-
-                if (img.complete) {
-
-                    imageLoaded();
-
-                } else {
-
-                    img.addEventListener(
-                        'load',
-                        imageLoaded,
-                        { once: true }
-                    );
-
-                    img.addEventListener(
-                        'error',
-                        imageLoaded,
-                        { once: true }
-                    );
-                }
-
-            });
-        }
-
+        startMemoryMessage();
 
         // 4. GALLERY ANIMATION
         const cards =
@@ -795,7 +770,6 @@
 
 
         // 8. EXECUTION
-        playMusic();
         startAutoScroll();
 
     </script>
