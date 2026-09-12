@@ -471,7 +471,7 @@
 
         .memory-message {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             color: #8e44ad;
             text-align: center;
             width: 90%;
@@ -479,7 +479,14 @@
             line-height: 1.7;
             white-space: pre-line;
         }
-
+        
+        @media (max-width: 600px) {
+            .memory-message {
+                font-size: 1.6rem;
+                line-height: 1.5;
+                width: 90%;
+            }
+        }
 
         .memory-message::after {
             content: "|";
@@ -917,7 +924,6 @@
 
             const messageText =
             `This little gift is just for you. 
-            
             Because someone as special as you
             deserves something special too.
             
