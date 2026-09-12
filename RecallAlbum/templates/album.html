@@ -474,6 +474,13 @@
 
     <script>
 
+        // Always start from the transition screen
+        window.scrollTo(0, 0);
+        
+        const loadingScreen = document.getElementById('image-loading-screen');
+        loadingScreen.style.display = 'flex';
+        loadingScreen.style.opacity = '1';
+
         // 1. HEART
         function createHearts() {
 
@@ -616,15 +623,16 @@
 
 
         // 5. LIGHTBOX
-        function openLightbox(src) {
-
-            document.getElementById(
-                'lightbox-img'
-            ).src = src;
-
-            document.getElementById(
-                'lightbox'
-            ).style.display = 'flex';
+       function openLightbox(src) {
+        
+            const lightbox =
+                document.getElementById('lightbox');
+        
+            const lightboxImg =
+                document.getElementById('lightbox-img');
+        
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
         }
 
 
@@ -770,7 +778,9 @@
 
 
         // 8. EXECUTION
-        startAutoScroll();
+        setTimeout(() => {
+            startAutoScroll();
+        }, 6000);
 
     </script>
 
