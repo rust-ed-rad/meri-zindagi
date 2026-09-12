@@ -1207,10 +1207,15 @@
         /* ================================= */
         /*          7. AUTO SCROLL           */
         /* ================================= */
-
-        let scrollSpeed = 0.35;
+        
         let isRewinding = false;
         let autoScrollStarted = false;
+        
+        // Phone's current speed
+        // little more speed for PC/Laptop
+        const scrollSpeed =
+            window.innerWidth <= 600 ? 0.35 : 0.45;
+        
         
         function startAutoScroll() {
         
@@ -1220,34 +1225,94 @@
         
             autoScrollStarted = true;
         
-            function loop() {
+            let lastTime = performance.now();
+            let scrollPosition = window.scrollY;
+        
+        
+            function loop(currentTime) {
+        
+                const deltaTime =
+                    Math.min(currentTime - lastTime, 50);
+        
+                lastTime = currentTime;
+        
         
                 if (!isRewinding) {
         
-                    window.scrollBy(0, scrollSpeed);
+                    /*
+                       Fractional position আলাদা করে রাখা হচ্ছে।
+                       তাই PC browser-এও scrolling আটকে যাবে না।
+                    */
+        
+                    scrollPosition +=
+                        scrollSpeed * (deltaTime / 16.67);
+        
+        
+                    window.scrollTo(
+                        0,
+                        scrollPosition
+                    );
+        
         
                     const atBottom =
-                        (window.innerHeight + window.scrollY) >=
-                        document.documentElement.scrollHeight - 10;
+                        (
+                            window.innerHeight +
+                            window.scrollY
+                        ) >=
+                        (
+                            document.documentElement
+                                .scrollHeight - 10
+                        );
+        
         
                     if (atBottom) {
+        
                         isRewinding = true;
+        
+                        scrollPosition =
+                            window.scrollY;
                     }
         
-                } else {
+                }
         
-                    window.scrollBy(0, -2);
+                else {
         
-                    if (window.scrollY <= 1) {
+                    /*
+                       Smoothly ফিরে যাবে একদম top-এ।
+                    */
         
-                        window.scrollTo(0, 0);
+                    scrollPosition -=
+                        3.5 * (deltaTime / 16.67);
+        
+        
+                    if (scrollPosition <= 0) {
+        
+                        scrollPosition = 0;
+        
+                        window.scrollTo(
+                            0,
+                            0
+                        );
         
                         isRewinding = false;
+        
                     }
+        
+                    else {
+        
+                        window.scrollTo(
+                            0,
+                            scrollPosition
+                        );
+        
+                    }
+        
                 }
+        
         
                 requestAnimationFrame(loop);
             }
+        
         
             requestAnimationFrame(loop);
         }
