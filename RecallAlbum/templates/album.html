@@ -1209,147 +1209,47 @@
         /* ================================= */
 
         let scrollSpeed = 0.35;
-
         let isRewinding = false;
-
         let autoScrollStarted = false;
-
-
+        
         function startAutoScroll() {
-
-            /*
-               Prevent accidentally starting
-               multiple animation loops.
-            */
-
+        
             if (autoScrollStarted) {
                 return;
             }
-
-
+        
             autoScrollStarted = true;
-
-
-            let lastTime = null;
-
-
-            function loop(timestamp) {
-
-                if (lastTime === null) {
-                    lastTime = timestamp;
-                }
-
-
-                /*
-                   Keep movement based on elapsed time.
-
-                   This makes scrolling much more
-                   consistent and smooth.
-                */
-
-                const delta =
-                    Math.min(
-                        timestamp - lastTime,
-                        32
-                    );
-
-
-                lastTime = timestamp;
-
-
+        
+            function loop() {
+        
                 if (!isRewinding) {
-
-                    /*
-                       Continuous fractional movement.
-                       No integer rounding.
-                    */
-
-                    const movement =
-                        scrollSpeed *
-                        (delta / 16.67);
-
-
-                    window.scrollBy(
-                        0,
-                        movement
-                    );
-
-
+        
+                    window.scrollBy(0, scrollSpeed);
+        
                     const atBottom =
-                        (
-                            window.innerHeight +
-                            window.scrollY
-                        ) >=
-                        (
-                            document.documentElement
-                                .scrollHeight -
-                            10
-                        );
-
-
+                        (window.innerHeight + window.scrollY) >=
+                        document.documentElement.scrollHeight - 10;
+        
                     if (atBottom) {
-
                         isRewinding = true;
-
                     }
-
-                }
-
-                else {
-
-                    /*
-                       Smooth rewind to top.
-                    */
-
-                    const distanceToTop =
-                        window.scrollY;
-
-
-                    const rewindAmount =
-                        Math.max(
-                            1,
-                            Math.min(
-                                distanceToTop * 0.08,
-                                4
-                            )
-                        );
-
-
-                    window.scrollBy(
-                        0,
-                        -rewindAmount
-                    );
-
-
-                    if (
-                        window.scrollY <= 1
-                    ) {
-
-                        window.scrollTo({
-                            top: 0,
-                            left: 0,
-                            behavior: 'auto'
-                        });
-
-
+        
+                } else {
+        
+                    window.scrollBy(0, -2);
+        
+                    if (window.scrollY <= 1) {
+        
+                        window.scrollTo(0, 0);
+        
                         isRewinding = false;
-
                     }
-
                 }
-
-
-                requestAnimationFrame(
-                    loop
-                );
-
+        
+                requestAnimationFrame(loop);
             }
-
-
-            requestAnimationFrame(
-                loop
-            );
-
+        
+            requestAnimationFrame(loop);
         }
 
 
