@@ -27,16 +27,16 @@
             overflow-x: hidden;
             color: #444;
         }
-
-        @font-face {
+        /**********************************************************************************************************/
+     /*  @font-face {
             font-family: 'Manha Jhankaar';
             src: url('/static/fonts/Manha%20Jhankaar%20Unicode.otf') format('opentype');
         }
 
 
-       /* .bangla-text {
+        .bangla-text {
             font-family: 'Manha Jhankaar', sans-serif;
-        } */
+        } *******************************************************************************************************/
         
         .english-text {
             font-family: 'Dancing Script', cursive;
@@ -644,15 +644,7 @@
                     alt="Memory">
 
                 <div class="photo-caption">
-                    {% for char in photo.caption %}
-                        {% if '\u0980' <= char <= '\u09FF' %}
-                            <span class="bangla-text">{{ char }}</span>
-                        {% else %}
-                            <span class="english-text">{{ char }}</span>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-
+                    
             </div>
 
             {% endfor %}
@@ -1270,8 +1262,8 @@
         
         
         /*
-           Phone-এর touch scroll manually detect করা হবে।
-           Auto-scroll touch করার কারণে বন্ধ হবে না permanently.
+           Phone touch scroll manually detect
+           If touch Auto-scroll won't stop permanently.
         */
         
         if (isPhone) {
@@ -1378,10 +1370,10 @@
         
                     /*
                        PC:
-                       Pointer page-এর উপর থাকলে pause.
+                       Pointer on page pause.
         
                        Phone:
-                       Pointer condition নেই.
+                       NO Pointer condition.
                     */
         
                     const shouldPause =
