@@ -1210,12 +1210,93 @@
         
         let isRewinding = false;
         let autoScrollStarted = false;
+        let isManuallyScrolling = false;
+        let isPointerOverPage = false;
         
-        // Phone's current speed
-        // little more speed for PC/Laptop
-        const scrollSpeed =
-            window.innerWidth <= 600 ? 0.35 : 0.45;
+        // Phone-এর current speed
+        // PC/Laptop-এর জন্য আলাদা speed
+        const isPhone = window.innerWidth <= 600;
         
+        const scrollSpeed = isPhone ? 0.35 : 0.45;
+        
+        
+        // =========================================
+        //        MANUAL SCROLL DETECTION
+        // =========================================
+        
+        let manualScrollTimer = null;
+        
+        window.addEventListener('wheel', () => {
+        
+            if (!isPhone) {
+                isManuallyScrolling = true;
+        
+                clearTimeout(manualScrollTimer);
+        
+                manualScrollTimer = setTimeout(() => {
+                    isManuallyScrolling = false;
+                }, 800);
+            }
+        
+        }, { passive: true });
+        
+        
+        /*
+           Phone-এর touch scroll manually detect করা হবে।
+           Auto-scroll touch করার কারণে বন্ধ হবে না permanently.
+        */
+        
+        if (isPhone) {
+        
+            let touchTimer = null;
+        
+            window.addEventListener('touchstart', () => {
+        
+                isManuallyScrolling = true;
+        
+                clearTimeout(touchTimer);
+        
+            }, { passive: true });
+        
+        
+            window.addEventListener('touchend', () => {
+        
+                clearTimeout(touchTimer);
+        
+                touchTimer = setTimeout(() => {
+                    isManuallyScrolling = false;
+                }, 500);
+        
+            }, { passive: true });
+        
+        }
+        
+        
+        // =========================================
+        //        PC POINTER PAUSE
+        // =========================================
+        
+        if (!isPhone) {
+        
+            document.addEventListener('mouseenter', () => {
+        
+                isPointerOverPage = true;
+        
+            });
+        
+        
+            document.addEventListener('mouseleave', () => {
+        
+                isPointerOverPage = false;
+        
+            });
+        
+        }
+        
+        
+        // =========================================
+        //             AUTO SCROLL
+        // =========================================
         
         function startAutoScroll() {
         
@@ -1225,33 +1306,74 @@
         
             autoScrollStarted = true;
         
+        
             let lastTime = performance.now();
+        
             let scrollPosition = window.scrollY;
         
         
             function loop(currentTime) {
         
                 const deltaTime =
-                    Math.min(currentTime - lastTime, 50);
+                    Math.min(
+                        currentTime - lastTime,
+                        50
+                    );
         
                 lastTime = currentTime;
         
         
+                /*
+                   Always sync our internal position
+                   with the user's actual position.
+        
+                   This is what allows manual scrolling.
+                */
+        
+                if (
+                    Math.abs(
+                        window.scrollY - scrollPosition
+                    ) > 2
+                ) {
+        
+                    scrollPosition =
+                        window.scrollY;
+        
+                }
+        
+        
+                // =====================================
+                //             FORWARD SCROLL
+                // =====================================
+        
                 if (!isRewinding) {
         
                     /*
-                       Fractional position আলাদা করে রাখা হচ্ছে।
-                       তাই PC browser-এও scrolling আটকে যাবে না।
+                       PC:
+                       Pointer page-এর উপর থাকলে pause.
+        
+                       Phone:
+                       Pointer condition নেই.
                     */
         
-                    scrollPosition +=
-                        scrollSpeed * (deltaTime / 16.67);
+                    const shouldPause =
+                        (!isPhone && isPointerOverPage) ||
+                        isManuallyScrolling;
         
         
-                    window.scrollTo(
-                        0,
-                        scrollPosition
-                    );
+                    if (!shouldPause) {
+        
+                        scrollPosition +=
+                            scrollSpeed *
+                            (deltaTime / 16.67);
+        
+        
+                        window.scrollTo(
+                            0,
+                            scrollPosition
+                        );
+        
+                    }
         
         
                     const atBottom =
@@ -1271,39 +1393,53 @@
         
                         scrollPosition =
                             window.scrollY;
+        
                     }
         
                 }
         
+        
+                // =====================================
+                //             REWIND TO TOP
+                // =====================================
+        
                 else {
         
                     /*
-                       Smoothly ফিরে যাবে একদম top-এ।
+                       Rewind only when user is not
+                       manually scrolling.
                     */
         
-                    scrollPosition -=
-                        3.5 * (deltaTime / 16.67);
+                    if (!isManuallyScrolling) {
+        
+                        scrollPosition -=
+                            3.5 *
+                            (deltaTime / 16.67);
         
         
-                    if (scrollPosition <= 0) {
+                        if (scrollPosition <= 0) {
         
-                        scrollPosition = 0;
+                            scrollPosition = 0;
         
-                        window.scrollTo(
-                            0,
-                            0
-                        );
         
-                        isRewinding = false;
+                            window.scrollTo(
+                                0,
+                                0
+                            );
         
-                    }
         
-                    else {
+                            isRewinding = false;
         
-                        window.scrollTo(
-                            0,
-                            scrollPosition
-                        );
+                        }
+        
+                        else {
+        
+                            window.scrollTo(
+                                0,
+                                scrollPosition
+                            );
+        
+                        }
         
                     }
         
@@ -1311,10 +1447,12 @@
         
         
                 requestAnimationFrame(loop);
+        
             }
         
         
             requestAnimationFrame(loop);
+        
         }
 
 
