@@ -392,7 +392,8 @@
             position: absolute;
             top: -50px;
             font-size: 18px;
-            animation: fall-heart linear forwards;
+            color: rgba(192, 119, 255, 0.4);
+            animation: fall-heart linear infinite;
             opacity: 0.8;
         }
 
@@ -476,7 +477,7 @@
 
                 const heart = document.createElement('div');
 
-                heart.innerHTML = '❤️';
+                heart.innerHTML = '❤';
                 heart.className = 'heart';
 
                 heart.style.left = Math.random() * 100 + 'vw';
@@ -503,7 +504,7 @@
             const heart = document.createElement('div');
 
             heart.className = 'transition-heart';
-            heart.innerText = '❤️';
+            heart.innerHTML = '❤';
 
             heart.style.left =
                 Math.random() * 100 + '%';
@@ -535,7 +536,7 @@
 
             // Temporary message — later Come From Admin Portal
             const messageText =
-                "You are always SPECIAL to me, You are my LOVE, You are HEART, You are my SOUL, You are my ZINDAGi 💗Happy Birthday My Zindagi💗";
+                <p1>"You are always SPECIAL to me"</p1> <p1>"You are my LOVE, You are HEART"</p1> <p1> "You are my SOUL"</p1> <p1>"You are my ZINDAGi"</p1> <p1>"💗Happy Birthday My Zindagi💗"</p1>;
 
             let index = 0;
 
