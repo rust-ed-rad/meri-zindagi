@@ -602,7 +602,9 @@
         }
 
 
-        startMemoryMessage();
+        window.addEventListener('load', () => {
+            startMemoryMessage();
+        });
 
         // 4. GALLERY ANIMATION
         const cards =
@@ -778,7 +780,7 @@
 
 
         // 8. EXECUTION
-        setTimeout(() => {
+        startAutoScroll();
 
     </script>
 
