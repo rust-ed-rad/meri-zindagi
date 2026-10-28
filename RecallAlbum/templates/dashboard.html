@@ -3,198 +3,807 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>RecallAlbum — Admin Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { color: #333; border-bottom: 2px solid #8e44ad; padding-bottom: 10px; }
-        .box { margin-bottom: 30px; padding: 20px; background: #fafafa; border-radius: 5px; border: 1px solid #ddd; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background: #8e44ad; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #732d91; }
-        button.delete { background: #e74c3c; margin-left: 10px; padding: 5px 10px; font-size: 12px; }
-        .photo-list-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: white; padding: 10px; border: 1px solid #eee; }
-        .success { color: green; font-weight: bold; margin-bottom: 15px; }
-        .links { margin-top: 20px; }
-        .links a { margin-right: 15px; text-decoration: none; color: #8e44ad; font-weight: bold; }
-
-        .device-item {
-            background: white;
-            border: 1px solid #eee;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+        :root {
+            --primary: #7651b5;
+            --primary-dark: #59358f;
+            --bg: #f6f3fb;
+            --card: #ffffff;
+            --text: #30283d;
+            --muted: #827991;
+            --border: #e9e2f2;
+            --danger: #d94455;
+            --success: #23845d;
         }
 
-        .device-role {
-            font-weight: bold;
-            color: #8e44ad;
-            margin-bottom: 5px;
+        * {
+            box-sizing: border-box;
         }
 
-        .device-info {
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button, input, textarea, select {
+            font: inherit;
+        }
+
+        button, .button {
+            border: none;
+            border-radius: 9px;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
             font-size: 13px;
-            color: #555;
-            word-break: break-word;
         }
 
-        .logout-all {
-            background: #e74c3c;
+        button:hover, .button:hover {
+            background: var(--primary-dark);
         }
 
-        .logout-all:hover {
-            background: #c0392b;
+        .danger {
+            background: var(--danger);
+        }
+
+        .secondary {
+            background: #eee7f8;
+            color: var(--primary-dark);
+        }
+
+        .topbar {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 17px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            color: var(--primary-dark);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 225px minmax(0, 1fr);
+            max-width: 1450px;
+            margin: auto;
+            min-height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            padding: 22px 14px;
+            border-right: 1px solid var(--border);
+            background: #fbfaff;
+        }
+
+        .nav-btn {
+            display: flex;
+            width: 100%;
+            text-align: left;
+            align-items: center;
+            justify-content: space-between;
+            color: #665a78;
+            background: transparent;
+            margin-bottom: 7px;
+            padding: 12px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #eee6fa;
+            color: var(--primary-dark);
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #e33e54;
+            border-radius: 50%;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        main {
+            min-width: 0;
+            padding: 28px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin: 0 0 6px;
+        }
+
+        h2 {
+            font-size: 17px;
+            margin-top: 0;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin: 0 0 22px;
+            font-size: 13px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 18px rgba(63, 37, 95, 0.035);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 19px;
+            border-radius: 14px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: 700;
+            margin-top: 6px;
+            color: var(--primary-dark);
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 14px 0 7px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 11px 12px;
+            background: white;
+            color: var(--text);
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .form-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .help {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .flash {
+            padding: 12px 15px;
+            border-radius: 9px;
+            background: #eee7fa;
+            color: var(--primary-dark);
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .photo-item {
+            min-width: 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px;
+            background: #fff;
+        }
+
+        .photo-item img {
+            display: block;
+            width: 100%;
+            height: 175px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f2edf8;
+        }
+
+        .photo-item form {
+            margin-top: 8px;
+        }
+
+        .photo-item .delete-form {
+            margin-top: 12px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 560px;
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eee7fa;
+            color: var(--primary-dark);
+            border-radius: 20px;
+            padding: 4px 9px;
+            font-size: 11px;
+        }
+
+        .notice {
+            border: 1px solid var(--border);
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .notice.unread {
+            background: #f7f1ff;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notice small {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 13px;
+            padding: 14px 0;
+        }
+
+        .password-wrap {
+            display: flex;
+            gap: 8px;
+        }
+
+        .password-wrap input {
+            min-width: 0;
+        }
+
+        .toggle-password {
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 800px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: flex;
+                gap: 5px;
+                overflow-x: auto;
+                padding: 12px;
+                border-right: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-btn {
+                width: auto;
+                flex-shrink: 0;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            main {
+                padding: 17px 13px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 9px;
+            }
+
+            .stat {
+                padding: 14px;
+            }
+
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid .full {
+                grid-column: auto;
+            }
+
+            .card {
+                padding: 16px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="container">
-        <h2>Admin Dashboard</h2>
-        
+<header class="topbar">
+    <div class="brand">RecallAlbum Admin</div>
+
+    <div class="top-actions">
+        <a class="button secondary" href="{{ url_for('gallery') }}">Preview Gallery</a>
+
+        <form action="{{ url_for('logout') }}" method="POST">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</header>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <button class="nav-btn active" data-section="overview">Overview</button>
+        <button class="nav-btn" data-section="album">Album Manager</button>
+
+        <button class="nav-btn" data-section="activity">
+            Login Activity
+            {% if login_history %}
+                <span class="dot"></span>
+            {% endif %}
+        </button>
+
+        <button class="nav-btn" data-section="notifications">
+            Notifications
+            {% if unread_notifications %}
+                <span class="dot"></span>
+            {% endif %}
+        </button>
+
+        <button class="nav-btn" data-section="security">Security Settings</button>
+        <button class="nav-btn" data-section="general">General Settings</button>
+    </aside>
+
+    <main>
+
         {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="success">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
-        <div class="links">
-            <a href="/gallery">Preview Gallery</a>
-            <a href="/logout" style="color: #e74c3c;">Logout</a>
-        </div>
+        <!-- OVERVIEW -->
+        <section class="section active" id="overview">
+            <h1>Dashboard</h1>
+            <p class="subtitle">Manage your private memory album.</p>
 
-        <!-- Add New Photo -->
-        <div class="box">
-            <h3>Add New Photo</h3>
-
-            <form action="/add_photo" method="POST" enctype="multipart/form-data">
-
-                <label>Select Photo:</label>
-                <input type="file" name="image" accept="image/*" required>
-
-                <label>Caption:</label>
-                <input type="text" name="caption" required placeholder="Our new memory">
-
-                <button type="submit">Add Photo</button>
-
-            </form>
-        </div>
-
-        <!-- Add Background Audio -->
-        <div class="box">
-            <h3>Background Music</h3>
-        
-            <form action="/add_audio" method="POST" enctype="multipart/form-data">
-        
-                <label>Select Audio:</label>
-                <input type="file" name="audio" accept="audio/*" required>
-        
-                <button type="submit">Add Background Music</button>
-        
-            </form>
-        </div>
-
-        <!-- Manage Existing Photos -->
-        <div class="box">
-            <h3>Existing Photos</h3>
-
-            {% for photo in photos %}
-
-                <div class="photo-list-item">
-
-                    <span>
-                        <strong>{{ photo.url }}</strong> - {{ photo.caption }}
-                    </span>
-
-                    <a href="/delete_photo/{{ photo.id }}" class="delete button">
-                        Delete
-                    </a>
-
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Total Photos</div>
+                    <div class="stat-value">{{ photos|length }}</div>
                 </div>
 
-            {% else %}
+                <div class="stat">
+                    <div class="stat-label">Active Sessions</div>
+                    <div class="stat-value">{{ active_sessions|length }}</div>
+                </div>
 
-                <p>No photos added yet.</p>
+                <div class="stat">
+                    <div class="stat-label">Unread Notifications</div>
+                    <div class="stat-value">{{ unread_notifications }}</div>
+                </div>
+            </div>
 
-            {% endfor %}
-        </div>
+            <div class="card">
+                <h2>Quick Actions</h2>
+                <div class="top-actions">
+                    <button type="button" data-open-section="album">Manage Photos</button>
+                    <button type="button" class="secondary" data-open-section="activity">View Login Activity</button>
+                    <button type="button" class="secondary" data-open-section="security">Security Settings</button>
+                </div>
+            </div>
 
-        <!-- Active Devices -->
-        <div class="box">
+            <div class="card">
+                <h2>Active Sessions</h2>
 
-            <h3>Active Devices</h3>
+                {% if active_sessions %}
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Browser / Device Information</th>
+                                    <th>Last Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in active_sessions %}
+                                <tr>
+                                    <td><span class="badge">{{ item.role }}</span></td>
+                                    <td>{{ item.user_agent or 'Unknown' }}</td>
+                                    <td>{{ item.last_seen }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty">No active sessions.</p>
+                {% endif %}
 
-            {% if active_sessions %}
+                <form action="{{ url_for('logout_all') }}" method="POST"
+                      onsubmit="return confirm('Log out all devices?');">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <button class="danger" type="submit">Log Out All Devices</button>
+                </form>
+            </div>
+        </section>
 
-                {% for device in active_sessions %}
+        <!-- ALBUM MANAGER -->
+        <section class="section" id="album">
+            <h1>Album Manager</h1>
+            <p class="subtitle">Add photos, update captions, and change their order.</p>
 
-                    <div class="device-item">
+            <div class="card">
+                <h2>Add New Photo</h2>
 
-                        <div class="device-role">
-                            {{ device.role|capitalize }}
-                        </div>
+                <form action="{{ url_for('add_photo') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 
-                        <div class="device-info">
-                            <strong>Device:</strong>
-                            {{ device.user_agent }}
-                        </div>
+                    <label for="image">Photo</label>
+                    <input id="image" type="file" name="image"
+                           accept=".jpg,.jpeg,.png,.webp,.gif" required>
 
-                        <div class="device-info">
-                            <strong>Login:</strong>
-                            {{ device.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
-                        </div>
+                    <label for="new-caption">Caption</label>
+                    <textarea id="new-caption" name="caption" maxlength="500"
+                              placeholder="Write a caption..." required></textarea>
 
-                        <div class="device-info">
-                            <strong>Last Active:</strong>
-                            {{ device.last_seen.strftime('%Y-%m-%d %H:%M:%S') }}
-                        </div>
+                    <br><br>
+                    <button type="submit">Add Photo</button>
+                </form>
+            </div>
 
+            <div class="card">
+                <h2>Existing Photos ({{ photos|length }})</h2>
+
+                {% if photos %}
+                    <div class="photo-grid">
+                        {% for photo in photos %}
+                        <article class="photo-item">
+
+                            <img
+                                src="{{ url_for('private_image', photo_id=photo.id) }}"
+                                alt="Album photo"
+                                loading="lazy"
+                            >
+
+                            <form action="{{ url_for('edit_photo', photo_id=photo.id) }}"
+                                  method="POST">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+
+                                <label>Caption</label>
+                                <textarea name="caption" maxlength="500" required>{{ photo.caption }}</textarea>
+
+                                <label>Serial Number</label>
+                                <input type="number" name="serial_no"
+                                       min="1" value="{{ photo.serial_no or loop.index }}" required>
+
+                                <p class="help">Smaller serial numbers appear earlier in the album.</p>
+
+                                <button type="submit">Save Changes</button>
+                            </form>
+
+                            <form class="delete-form"
+                                  action="{{ url_for('delete_photo', photo_id=photo.id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Delete this photo permanently?');">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                <button class="danger" type="submit">Delete Photo</button>
+                            </form>
+                        </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty">No photos have been added yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- LOGIN ACTIVITY -->
+        <section class="section" id="activity">
+            <h1>Login Activity</h1>
+            <p class="subtitle">Recent login and logout events. Records are retained for approximately three days.</p>
+
+            <div class="card">
+                {% if login_history %}
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Role</th>
+                                    <th>Browser / Device</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in login_history %}
+                                <tr>
+                                    <td><span class="badge">{{ item.event }}</span></td>
+                                    <td>{{ item.role or 'Unknown' }}</td>
+                                    <td>{{ item.user_agent or 'Unknown' }}</td>
+                                    <td>{{ item.created_at }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty">No recent login activity.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="section" id="notifications">
+            <div class="row">
+                <div>
+                    <h1>Notifications</h1>
+                    <p class="subtitle">Security and album updates.</p>
+                </div>
+
+                {% if unread_notifications %}
+                <form action="{{ url_for('mark_notifications_read') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit">Mark All Read</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                {% if notifications %}
+                    {% for item in notifications %}
+                    <div class="notice {% if not item.is_read %}unread{% endif %}">
+                        <strong>{{ item.message }}</strong>
+                        <small>
+                            {{ item.category }} · {{ item.created_at }}
+                            {% if not item.is_read %} · Unread{% endif %}
+                        </small>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="empty">No notifications yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- SECURITY SETTINGS -->
+        <section class="section" id="security">
+            <h1>Security Settings</h1>
+            <p class="subtitle">Change passwords and manage active sessions.</p>
+
+            <div class="card">
+                <h2>Change Passwords</h2>
+                <p class="help">
+                    Leave a password field blank if you do not want to change that password.
+                    Admin passwords must be at least 12 characters; viewer passwords at least 8.
+                </p>
+
+                <form action="{{ url_for('update_settings') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+
+                    <label for="viewer-password">New Viewer Password</label>
+                    <div class="password-wrap">
+                        <input id="viewer-password" type="password" name="viewer_password"
+                               minlength="8" autocomplete="new-password">
+                        <button type="button" class="toggle-password"
+                                data-target="viewer-password">Show</button>
                     </div>
 
-                {% endfor %}
+                    <label for="admin-password">New Admin Password</label>
+                    <div class="password-wrap">
+                        <input id="admin-password" type="password" name="admin_password"
+                               minlength="12" autocomplete="new-password">
+                        <button type="button" class="toggle-password"
+                                data-target="admin-password">Show</button>
+                    </div>
 
-                <form action="/logout_all" method="POST"
-                      onsubmit="return confirm('Logout all devices?');">
+                    <p class="help">
+                        Passwords are not displayed here. After changing a password,
+                        you will need to log in again.
+                    </p>
 
-                    <button type="submit" class="logout-all">
-                        Logout All Devices
+                    <br>
+                    <button type="submit"
+                            onclick="return confirm('Save password changes? You will be logged out.');">
+                        Save Passwords
                     </button>
-
                 </form>
+            </div>
 
-            {% else %}
+            <div class="card">
+                <h2>Session Security</h2>
+                <p class="help">
+                    Use this if you want to invalidate all current login sessions.
+                </p>
 
-                <p>No active devices.</p>
+                <form action="{{ url_for('logout_all') }}" method="POST"
+                      onsubmit="return confirm('Log out all devices?');">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="danger">Log Out All Devices</button>
+                </form>
+            </div>
 
-            {% endif %}
+            <div class="card">
+                <h2>Email Recovery Setup</h2>
+                <p class="help">
+                    Email recovery requires SMTP credentials and recovery-email handling in
+                    the backend. This form is not connected to a recovery route yet, so do
+                    not enter email credentials here.
+                </p>
+            </div>
+        </section>
 
-        </div>
+        <!-- GENERAL SETTINGS -->
+        <section class="section" id="general">
+            <h1>General Settings</h1>
+            <p class="subtitle">Update the heading shown on your album.</p>
 
-        <!-- Site Settings -->
-        <div class="box">
+            <div class="card">
+                <form action="{{ url_for('update_settings') }}" method="POST">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
 
-            <h3>Site Settings</h3>
+                    <label for="heading">Album Heading</label>
+                    <input id="heading" type="text" name="heading"
+                           maxlength="150" value="{{ settings.heading }}" required>
 
-            <form action="/update_settings" method="POST">
+                    <p class="help">
+                        Password fields are intentionally left blank so current passwords
+                        are not displayed.
+                    </p>
 
-                <label>Gallery Heading:</label>
-                <input type="text" name="heading" value="{{ settings.heading }}">
+                    <button type="submit">Save Heading</button>
+                </form>
+            </div>
 
-                <label>Viewer Password:</label>
-                <input type="password" name="viewer_password" value="{{ settings.viewer_password }}">
+            <div class="card">
+                <h2>Database Information</h2>
+                <p class="help">
+                    Photos are stored in PostgreSQL and served through the Flask private-image route.
+                    Keep your Render environment variables private.
+                </p>
+            </div>
+        </section>
 
-                <label>Admin Password:</label>
-                <input type="password" name="admin_password" value="{{ settings.admin_password }}">
+    </main>
+</div>
 
-                <button type="submit">Save Settings</button>
+<script>
+    const navButtons = document.querySelectorAll("[data-section]");
+    const sections = document.querySelectorAll(".section");
 
-            </form>
+    function openSection(sectionName) {
+        sections.forEach(section => {
+            section.classList.toggle("active", section.id === sectionName);
+        });
 
-        </div>
+        navButtons.forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.section === sectionName
+            );
+        });
 
-    </div>
+        history.replaceState(null, "", "#" + sectionName);
+    }
+
+    navButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            openSection(button.dataset.section);
+        });
+    });
+
+    document.querySelectorAll("[data-open-section]").forEach(button => {
+        button.addEventListener("click", () => {
+            openSection(button.dataset.openSection);
+        });
+    });
+
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(button.dataset.target);
+
+            if (!input) return;
+
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+            button.textContent = show ? "Hide" : "Show";
+        });
+    });
+
+    const requestedSection = window.location.hash.replace("#", "");
+
+    if (requestedSection && document.getElementById(requestedSection)) {
+        openSection(requestedSection);
+    }
+</script>
 
 </body>
 </html>
