@@ -902,12 +902,12 @@ def update_settings():
         flash("Heading cannot be empty.")
         return redirect(url_for("dashboard"))
 
-    if new_viewer_password and len(new_viewer_password) < 4:
-        flash("Viewer password must be at least 4 characters.")
+    if new_viewer_password and len(new_viewer_password) < 8:
+        flash("Viewer password must be at least 8 characters.")
         return redirect(url_for("dashboard"))
 
-    if new_admin_password and len(new_admin_password) < 4:
-        flash("Admin password must be at least 4 characters.")
+    if new_admin_password and len(new_admin_password) < 12:
+        flash("Admin password must be at least 12 characters.")
         return redirect(url_for("dashboard"))
 
     conn = get_db()
