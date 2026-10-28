@@ -4,271 +4,244 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meri Zindagi Hain Tu</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
     <style>
+        /* --- Basic Reset & Global Styles --- */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow: hidden;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e0c3fc, #d1c4e9);
-            color: #49345e;
+            /* Soft Purple Gradient */
+            background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #444;
         }
 
-        .hearts {
+        /* --- Floating Hearts Background --- */
+        .bg-hearts {
             position: fixed;
-            inset: 0;
-            overflow: hidden;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
 
         .heart {
             position: absolute;
-            bottom: -40px;
-            color: rgba(255, 255, 255, 0.65);
-            font-size: 22px;
-            animation: floatUp linear infinite;
+            top: -10%;
+            color: rgba(192, 119, 255, 0.4);
+            animation: fall linear infinite;
+            font-size: 20px;
         }
 
-        @keyframes floatUp {
-            from {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0;
-            }
-            15% {
-                opacity: 0.8;
-            }
-            to {
-                transform: translateY(-115vh) rotate(360deg);
-                opacity: 0;
-            }
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        .login-card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 420px;
-            padding: 38px 30px;
+        /* --- Password Section --- */
+        #password-section {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             text-align: center;
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            box-shadow: 0 15px 45px rgba(87, 53, 119, 0.16);
+            position: relative;
+            z-index: 2;
+        }
+
+        .lock-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(142, 68, 173, 0.15);
             backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            animation: float 3s ease-in-out infinite;
         }
 
-        .heart-icon {
-            font-size: 42px;
-            margin-bottom: 10px;
-            animation: heartbeat 1.5s infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.12); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.08); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(32px, 7vw, 43px);
-            color: #7952a8;
-            margin-bottom: 8px;
+            font-size: 3.2rem;
+            color: #8e44ad;
+            margin-bottom: 20px;
         }
 
-        .subtitle {
-            font-size: 13px;
-            color: #8c7a9e;
-            margin-bottom: 27px;
+        p {
+            color: #7f8c8d;
         }
 
-        label {
-            display: block;
-            text-align: left;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 8px;
-        }
-
-        .password-wrap {
-            display: flex;
-            align-items: center;
-            border: 1px solid #e3d7ef;
-            border-radius: 12px;
-            background: white;
-            overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .password-wrap:focus-within {
-            border-color: #9a76c5;
-            box-shadow: 0 0 0 3px rgba(154, 118, 197, 0.13);
-        }
-
-        .password-wrap input {
-            width: 100%;
-            min-width: 0;
-            padding: 14px;
-            border: none;
+        input[type="password"] {
+            padding: 14px 24px;
+            border: 2px solid #d1c4e9;
+            border-radius: 30px;
             outline: none;
-            background: transparent;
-            color: #49345e;
-            font: inherit;
-            font-size: 14px;
-        }
-
-        .toggle-password {
-            flex-shrink: 0;
-            padding: 10px 12px;
-            border: none;
-            background: transparent;
-            color: #7952a8;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
+            width: 260px;
+            text-align: center;
+            font-size: 1rem;
+            transition: 0.3s;
             margin-top: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="password"]:focus {
+            border-color: #8e44ad;
+            width: 280px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 14px 35px;
+            background: linear-gradient(45deg, #a855f7, #6366f1);
             border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #9b72c9, #7650a8);
+            border-radius: 30px;
             color: white;
-            font-family: inherit;
-            font-size: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            width: 260px;
         }
 
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(118, 80, 168, 0.25);
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .error {
+        .error-msg {
+            color: #e74c3c;
             margin-top: 15px;
-            padding: 10px;
-            border-radius: 9px;
-            background: #fff0f1;
-            color: #bd3546;
-            font-size: 12px;
+            font-size: 0.9rem;
         }
 
-        .footer {
-            margin-top: 24px;
-            font-size: 11px;
-            color: #a393b4;
+            /* --- Mobile: Slightly Larger Login Box --- */
+    @media (max-width: 800px) {
+        /* For Login Page */
+        #password-section {
+            width: 800px; 
+            margin-left: calc(50% - 400px);
+            transform: scale(0.70); 
+            transform-origin: center;
+            overflow: hidden;
         }
-
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 32px 22px;
-                border-radius: 20px;
-            }
-
-            .subtitle {
-                font-size: 12px;
-            }
+        
+        /* For Gallery Page */
+        #gallery-section {
+            width: 800px; 
+            margin-left: calc(50% - 400px);
+            transform: scale(0.47); 
+            transform-origin: top center;
+            margin-bottom: -400px; 
+            overflow: hidden;
         }
-    </style>
-</head>
-
-<body>
-
-<div class="hearts" id="hearts"></div>
-
-<main class="login-card">
-    <div class="heart-icon">💜</div>
-
-    <h1>Meri Zindagi Hain Tu</h1>
-    <p class="subtitle">Some memories are meant to stay forever.</p>
-
-    <form action="{{ url_for('login') }}" method="POST" id="loginForm">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-
-        <label for="password">Enter Password</label>
-
-        <div class="password-wrap">
-            <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required
-            >
-
-            <button
-                type="button"
-                class="toggle-password"
-                id="togglePassword"
-                aria-label="Show password"
-            >Show</button>
-        </div>
-
-        <button type="submit" class="submit-btn" id="submitBtn">
-            Open My Heart ♡
-        </button>
-
-        {% if error %}
-            <div class="error" role="alert">{{ error }}</div>
-        {% endif %}
-    </form>
-
-    <div class="footer">Made with love ♡</div>
-</main>
-
-<script>
-    // Floating hearts
-    const heartsContainer = document.getElementById("hearts");
-    const heartSymbols = ["♡", "♥", "❤"];
-
-    for (let i = 0; i < 22; i++) {
-        const heart = document.createElement("span");
-        heart.className = "heart";
-        heart.textContent = heartSymbols[
-            Math.floor(Math.random() * heartSymbols.length)
-        ];
-
-        heart.style.left = Math.random() * 100 + "%";
-        heart.style.animationDuration = (8 + Math.random() * 10) + "s";
-        heart.style.animationDelay = (Math.random() * 10) + "s";
-        heart.style.fontSize = (14 + Math.random() * 18) + "px";
-
-        heartsContainer.appendChild(heart);
     }
 
-    // Show / hide password
-    const passwordInput = document.getElementById("password");
-    const togglePassword = document.getElementById("togglePassword");
+        /* --- Gallery Loading Screen --- */
+#loading-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #e0c3fc 0%, #d1c4e9 100%);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
 
-    togglePassword.addEventListener("click", () => {
-        const show = passwordInput.type === "password";
+.loader-heart {
+    font-size: 55px;
+    animation: heartbeat 1s ease-in-out infinite;
+}
 
-        passwordInput.type = show ? "text" : "password";
-        togglePassword.textContent = show ? "Hide" : "Show";
-        togglePassword.setAttribute(
-            "aria-label",
-            show ? "Hide password" : "Show password"
-        );
-    });
-</script>
+.loading-text {
+    margin-top: 20px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    color: #8e44ad;
+}
 
+.loading-dots {
+    margin-top: 10px;
+    color: #8e44ad;
+    font-size: 20px;
+    letter-spacing: 5px;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Background Hearts Animation -->
+    <div class="bg-hearts" id="hearts-container"></div>
+
+    <!-- Password Screen -->
+    <section id="password-section">
+        <div class="lock-card">
+            <h1>For Meri Zindagi</h1>
+            <p>Enter the secret key that I gave you Sweetheart</p>
+            
+            <!--Added Form Tag For Python-->
+            <form method="POST" action="/" onsubmit="showLoading()">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                <input type="password" name="password" placeholder="Enter Password..." required autocomplete="new-password">
+                <br>
+                <button type="submit">Open My Heart</button>
+            </form>
+
+            <!--Error Messege Here From Python-->
+            {% if error %}
+                <p class="error-msg">{{ error }}</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Gallery Loading Screen --->
+    <div id="loading-screen">
+        <div class="loader-heart">❤️</div>
+        <div class="loading-text"></div>
+        <div class="loading-dots">•••</div>
+    </div>  
+
+    <script>
+        // --- Background Hearts Generator ---
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 4 + 3 + 's';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+        
+    function showLoading() {
+        document.getElementById('password-section').style.display = 'none';
+        document.getElementById('loading-screen').style.display = 'flex';
+    }
+    </script>
 </body>
 </html>
